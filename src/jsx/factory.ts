@@ -1,7 +1,7 @@
-import type { AnyElType, Component, JSX, JSXElement } from ".";
+import type { AnyElType, Component, JSXNode, JSXElement } from ".";
 
 export type Factory<T extends AnyElType> =
-    (props: T extends Component<infer P> ? P : { [key: string]: unknown }, ...children: JSX[]) => JSXElement<T>;
+    (props: T extends Component<infer P> ? P : { [key: string]: unknown }, ...children: JSXNode[]) => JSXElement<T>;
 
 const insideCreateFactory = <T extends AnyElType>(component: T): Factory<T> =>
     (props, ...children) => [component, props, ...children];

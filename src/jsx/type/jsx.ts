@@ -1,11 +1,11 @@
 import type { Attributes } from "./attributes";
-import type { JSX } from "..";
+import type { JSXNode } from "..";
 
 type Target = "_self" | "_blank" | "_parent" | "_top";
 
 declare global {
     namespace JSX {
-        type Element = JSX;
+        type Element = JSXNode;
         type IntrinsicElements = {
             [key: string]: Attributes;
         } & {
