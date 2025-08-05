@@ -1,21 +1,17 @@
 import type { HTMLElAttrEvMap } from "./eventmap";
 
-type AttributesBase<T extends object> = HTMLAttributes & T & {    
-    [key in keyof HTMLElAttrEvMap]:
-        (this: HTMLElement, ev: HTMLElAttrEvMap[key]) => unknown;
-} & {
-    $beforeMount: () => unknown;
-    $mount: (this: HTMLElement, ev: Event) => unknown;
-    $beforeUpdate: (this: HTMLElement, ev: Event) => unknown;
-    $update: (this: HTMLElement, ev: Event) => unknown;
-    $beforeUnmount: (this: HTMLElement, ev: Event) => unknown;
-    $unmount: () => unknown;
-}
-
 export type Attributes<T extends object = {}> = Partial<
-    AttributesBase<T> | {
-        [key in Exclude<string, keyof AttributesBase<T>>]: string;
-    }
+    HTMLAttributes & T & {    
+        [key in keyof HTMLElAttrEvMap]:
+            (this: HTMLElement, ev: HTMLElAttrEvMap[key]) => unknown;
+    } & {
+        $beforeMount: () => unknown;
+        $mount: (this: HTMLElement, ev: Event) => unknown;
+        $beforeUpdate: (this: HTMLElement, ev: Event) => unknown;
+        $update: (this: HTMLElement, ev: Event) => unknown;
+        $beforeUnmount: (this: HTMLElement, ev: Event) => unknown;
+        $unmount: () => unknown;
+    } & Record<string, string>
 >;
 
 type HTMLAttributes = {
