@@ -4,5 +4,6 @@ export type JSXNode = JSXElement<keyof HTMLElementTagNameMap> | JSXComponent<any
 export type JSXElement<T extends keyof HTMLElementTagNameMap> = [T, {[key: string]: unknown}, ...JSXNode[]];
 export type JSXComponent<T extends object> = [ComponentFunction<T>, T, ...JSXNode[]];
 
+export type { Component } from "./component";
 export { jsx } from "./element";
 export { h } from "./likereact";
