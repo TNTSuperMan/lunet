@@ -3,7 +3,8 @@
   "module": "src/index.ts",
   "type": "module",
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "alien-signals": "^2.0.6"
   },
   "peerDependencies": {
     "typescript": "^5"
