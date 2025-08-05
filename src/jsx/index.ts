@@ -1,6 +1,6 @@
 import { createFactory, type Factory } from "./factory";
 
-export type AnyElType = Component<object> | keyof HTMLElementTagNameMap;
+export type AnyElType = Component<any> | keyof HTMLElementTagNameMap;
 
 export type JSX = JSXElement<any> | string;
 export type JSXElement<T extends AnyElType> = [T, T extends Component<infer P> ? P : {[key: string]: unknown}, ...JSX[]];
@@ -13,7 +13,7 @@ export const jsx = new Proxy(
     (component: Component<object>) => createFactory(component), {
         get: (_, p: keyof HTMLElementTagNameMap) => createFactory(p),
     }
-) as ((component: Component<object>) => Factory<Component<object>>) & {
+) as (<T extends object>(component: Component<T>) => Factory<Component<T>>) & {
     [key in keyof HTMLElementTagNameMap]: Factory<key>;
 };
 
