@@ -1,9 +1,9 @@
 import { createFactory, type Factory } from "./factory";
 
-export type AnyComponent = Component<object> | keyof HTMLElementTagNameMap;
+export type AnyElType = Component<object> | keyof HTMLElementTagNameMap;
 
 export type JSX = JSXElement<any> | string;
-export type JSXElement<T extends AnyComponent> = [T, T extends Component<infer P> ? P : {[key: string]: unknown}, ...JSX[]];
+export type JSXElement<T extends AnyElType> = [T, T extends Component<infer P> ? P : {[key: string]: unknown}, ...JSX[]];
 
 export type Component<T extends object> =
     (render: (jsx: JSX) => void, init: T) => T;
