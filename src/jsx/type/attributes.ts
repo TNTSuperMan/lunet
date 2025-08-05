@@ -4,12 +4,12 @@ type AttributesBase<T extends object> = HTMLAttributes & T & {
     [key in keyof HTMLElAttrEvMap]:
         (this: HTMLElement, ev: HTMLElAttrEvMap[key]) => unknown;
 } & {
-    $beforeMount: (this: HTMLElement, ev: Event) => unknown;
+    $beforeMount: () => unknown;
     $mount: (this: HTMLElement, ev: Event) => unknown;
     $beforeUpdate: (this: HTMLElement, ev: Event) => unknown;
     $update: (this: HTMLElement, ev: Event) => unknown;
     $beforeUnmount: (this: HTMLElement, ev: Event) => unknown;
-    $unmount: (this: HTMLElement, ev: Event) => unknown;
+    $unmount: () => unknown;
 }
 
 export type Attributes<T extends object = {}> = Partial<
