@@ -16,3 +16,6 @@ export const jsx = new Proxy(
 ) as ((component: Component<object>) => Factory<Component<object>>) & {
     [key in keyof HTMLElementTagNameMap]: Factory<key>;
 };
+
+export { createFactory };
+export { h } from "./likereact";
