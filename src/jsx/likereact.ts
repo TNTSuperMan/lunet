@@ -1,5 +1,10 @@
-import type { AnyElType, Component, JSXNode } from ".";
+import type { JSXNode } from ".";
+import type { Component } from "./component";
 
-type JSXLikeReactFn<T extends AnyElType> = (type: T, props: T extends Component<infer P> ? P : (null | { [key: string]: unknown }), ...children: JSXNode[]) => JSXNode;
-
-export const h: JSXLikeReactFn<AnyElType> = (...args) => args;
+export const h = <T extends keyof HTMLElementTagNameMap | Component<any>>(
+    type: T,
+    props: T extends Component<infer P> ? P : { [key: string]: unknown },
+    ...children: JSXNode[]
+) => typeof type === "string" ?
+    [type, props, ...children] :
+    type(props);
