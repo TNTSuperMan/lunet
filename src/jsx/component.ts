@@ -1,6 +1,4 @@
-import type { JSXNode } from ".";
-
-export type JSXComponent<T extends object> = [ComponentFunction<T>, T, ...JSXNode[]];
+import type { JSXComponent, JSXNode } from ".";
 
 export type ComponentFunction<T extends object> = (render: (jsx: JSXNode) => void, initProps: T) => T;
 export type Component<T extends object> = (props: T) => JSXComponent<T>;

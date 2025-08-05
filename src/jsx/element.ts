@@ -1,6 +1,4 @@
-import type { JSXNode } from ".";
-
-export type JSXElement<T extends keyof HTMLElementTagNameMap> = [T, {[key: string]: unknown}, ...JSXNode[]];
+import type { JSXElement, JSXNode } from ".";
 
 export type Factory<T extends keyof HTMLElementTagNameMap> =
     (props: { [key: string]: unknown }, ...children: JSXNode[]) => JSXElement<T>;
