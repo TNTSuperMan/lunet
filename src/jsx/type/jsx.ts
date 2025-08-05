@@ -7,15 +7,15 @@ declare global {
     namespace JSX {
         type Element = JSXNode;
         type IntrinsicElements = {
-            [key: string]: Attributes;
+            [key in keyof HTMLElementTagNameMap]: Attributes<key>;
         } & {
-            div: Attributes;
-            ul: Attributes;
-            ol: Attributes;
-            li: Attributes;
-            br: Attributes;
-            button: Attributes;
-            a: Attributes<{
+            div: Attributes<"div">;
+            ul: Attributes<"ul">;
+            ol: Attributes<"ol">;
+            li: Attributes<"li">;
+            br: Attributes<"br">;
+            button: Attributes<"button">;
+            a: Attributes<"a", {
                 href: string;
                 download: string;
                 target: Target;
@@ -26,7 +26,7 @@ declare global {
                 rel: string;
                 shape: string;
             }>;
-            input: Attributes<{
+            input: Attributes<"input", {
                 accept: string;
                 alt: string;
                 autocomplete: "off" | "on" | string;
@@ -37,7 +37,7 @@ declare global {
                 type: "button" | "checkbox" | "color" | "date" | "datetime-local" | "email" | "file" | "hidden" | "image" | "month" | "number" | "password" | "radio" | "range" | "reset" | "search" | "submit" | "tel" | "text" | "time" | "url" | "week";
                 value: string;
             }>;
-            form: Attributes<{
+            form: Attributes<"form", {
                 "accept-charset": "UTF-8";
                 autocomplete: "off" | "on";
                 name: string;
@@ -45,7 +45,7 @@ declare global {
                 method: "post" | "get" | "dalog";
                 target: Target | "_unfencedTop";
             }>;
-            iframe: Attributes<{
+            iframe: Attributes<"iframe", {
                 allow: string;
                 allowfullscreen: boolean;
                 width: number;

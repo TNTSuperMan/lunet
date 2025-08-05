@@ -1,15 +1,15 @@
 import type { HTMLElAttrEvMap } from "./eventmap";
 
-export type Attributes<T extends object = {}> = Partial<
+export type Attributes<N extends keyof HTMLElementTagNameMap, T extends object = {}> = Partial<
     HTMLAttributes & T & {    
         [key in keyof HTMLElAttrEvMap]:
             (this: HTMLElement, ev: HTMLElAttrEvMap[key]) => unknown;
     } & {
         $beforeMount: () => unknown;
-        $mount: (this: HTMLElement, ev: Event) => unknown;
-        $beforeUpdate: (this: HTMLElement, ev: Event) => unknown;
-        $update: (this: HTMLElement, ev: Event) => unknown;
-        $beforeUnmount: (this: HTMLElement, ev: Event) => unknown;
+        $mount: (this: HTMLElement, ev: CustomEvent<HTMLElementTagNameMap[N]>) => unknown;
+        $beforeUpdate: (this: HTMLElement, ev: CustomEvent<HTMLElementTagNameMap[N]>) => unknown;
+        $update: (this: HTMLElement, ev: CustomEvent<HTMLElementTagNameMap[N]>) => unknown;
+        $beforeUnmount: (this: HTMLElement, ev: CustomEvent<HTMLElementTagNameMap[N]>) => unknown;
         $unmount: () => unknown;
     } & Record<string, string>
 >;
