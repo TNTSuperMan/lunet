@@ -1,6 +1,5 @@
-import { createRenderedDOM, renderNode, type RenderedNode } from ".";
+import { createRenderedDOM, renderNode, renderRealDOM } from ".";
 import type { JSXElement } from "../../jsx";
-import { Fragment } from "./fragment";
 
 export const renderElement = ([tag, props, ...children]: JSXElement<any>) => {
     props.$beforeMount?.();
@@ -34,8 +33,6 @@ export const renderElement = ([tag, props, ...children]: JSXElement<any>) => {
     })
 
     const rendered_children = children.map(e=>renderNode(e));
-    const renderRealDOM = (node: RenderedNode): Node[] | Node =>
-        node instanceof Fragment ? node.nodes.flatMap(renderRealDOM) : node.node;
     el.append(...rendered_children.flatMap(renderRealDOM));
 
     return createRenderedDOM<HTMLElement, JSXElement<any>>(el, ([tag, props, ...children]) => {

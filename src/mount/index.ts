@@ -1,5 +1,6 @@
 import type { JSXNode } from "../jsx";
-import { renderNode, renderedDOMMap } from "./dom";
+import { renderNode, renderRealDOM, renderedDOMMap } from "./dom";
+import { Fragment } from "./dom/fragment";
 
 export const render = (el: HTMLElement, jsx: JSXNode) => {
     el.childNodes.forEach(e=>{
@@ -7,5 +8,11 @@ export const render = (el: HTMLElement, jsx: JSXNode) => {
         e.remove();
     });
 
-    el.append(renderNode(jsx).node);
+    const node = renderNode(jsx);
+
+    if(node instanceof Fragment){
+        el.append(...node.nodes.flatMap(renderRealDOM));
+    }else{
+        el.append(node.node);
+    }
 }

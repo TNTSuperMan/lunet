@@ -26,6 +26,9 @@ export const createRenderedDOM = <T extends Node, U extends JSXNode>(node: T, up
     return renderedDOM;
 }
 
+export const renderRealDOM = (node: RenderedNode): Node[] | Node =>
+    node instanceof Fragment ? node.nodes.flatMap(renderRealDOM) : node.node;
+
 export const renderNode = (jsx: JSXNode): RenderedNode => {
     if(typeof jsx === "string"){
         return renderText(jsx);
