@@ -1,5 +1,5 @@
 import type { JSXNode } from "../jsx";
-import { renderDOM, renderedDOMMap } from "./dom";
+import { renderNode, renderedDOMMap } from "./dom";
 
 export const render = (el: HTMLElement, jsx: JSXNode) => {
     el.childNodes.forEach(e=>{
@@ -7,5 +7,5 @@ export const render = (el: HTMLElement, jsx: JSXNode) => {
         e.remove();
     });
 
-    el.append(renderDOM(jsx).node);
+    el.append(renderNode(jsx).node);
 }
