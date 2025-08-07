@@ -1,42 +1,27 @@
-import type { JSXNode } from "../../jsx";
+import type { JSXElement, JSXFragment, JSXNode } from "../../jsx";
 import { renderElement } from "./element";
-import { Fragment } from "./fragment";
+import { renderFragment } from "./fragment";
+import { notImplementException } from "./notimplement";
 import { renderText } from "./text";
 
-export const renderedDOMMap = new WeakMap<Node, RenderedDOM>();
+export type RenderedDOM<T extends JSXNode> = [
+    T extends string ? 0 : T extends JSXElement ? 1 : T extends JSXFragment ? 2 : never,
+    () => (JSXElement | string)[], // 0 差分比較用のフラットJSX出力関数
+    (jsx: T) => void,              // 1 差分更新関数
+    () => Node,                    // 2 初回・トラブル時にフル描画をする関数
+    () => void,                    // 3 破棄関数
+]
 
-export type RenderedNode = RenderedDOM | Fragment;
+export type UnknownRenderedDOM = RenderedDOM<string> | RenderedDOM<JSXElement> | RenderedDOM<JSXFragment>;
 
-export interface RenderedDOM<T extends Node = Node, U extends JSXNode = JSXNode> {
-    node: T;
-    update(jsx: U): void;
-    revoke(): void;
-}
-
-export const createRenderedDOM = <T extends Node, U extends JSXNode>(node: T, update: (jsx: U) => void, additionalRevoke?: () => void) => {
-    const renderedDOM: RenderedDOM<T, U> = {
-        node,
-        update,
-        revoke(){
-            additionalRevoke?.();
-            renderedDOMMap.delete(node);
-        }
-    }
-    renderedDOMMap.set(node, renderedDOM);
-    return renderedDOM;
-}
-
-export const renderRealDOM = (node: RenderedNode): Node[] | Node =>
-    node instanceof Fragment ? node.nodes.flatMap(renderRealDOM) : node.node;
-
-export const renderNode = (jsx: JSXNode): RenderedNode => {
+export const renderNode = (jsx: JSXNode): UnknownRenderedDOM => {
     if(typeof jsx === "string"){
         return renderText(jsx);
     }else if(typeof jsx[0] === "string"){
         return renderElement(jsx);
     }else if(jsx[0] === null){
-        return new Fragment(jsx);
+        return renderFragment(jsx);
     }else{
-        throw new Error("Component rendering is not implemented");
+        return notImplementException();
     }
 }

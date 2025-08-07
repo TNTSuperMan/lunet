@@ -1,18 +1,12 @@
 import type { JSXNode } from "../jsx";
-import { renderNode, renderRealDOM, renderedDOMMap } from "./dom";
-import { Fragment } from "./dom/fragment";
+import { renderNode } from "./dom";
+import { revokerMap } from "./revokerMap";
 
 export const render = (el: HTMLElement, jsx: JSXNode) => {
     el.childNodes.forEach(e=>{
-        renderedDOMMap.get(e)?.revoke();
+        revokerMap.get(e)?.();
         e.remove();
     });
 
-    const node = renderNode(jsx);
-
-    if(node instanceof Fragment){
-        el.append(...node.nodes.flatMap(renderRealDOM));
-    }else{
-        el.append(node.node);
-    }
+    el.append(renderNode(jsx)[3]());
 }

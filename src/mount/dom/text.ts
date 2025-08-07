@@ -1,8 +1,13 @@
-import { createRenderedDOM } from ".";
+import type { RenderedDOM } from ".";
 
-export const renderText = (jsx: string) => {
+export const renderText = (jsx: string): RenderedDOM<string> => {
     let currentText = jsx;
     const node = new Text(currentText);
 
-    return createRenderedDOM<Text, string>(node, t => t !== currentText && (node.textContent = currentText = t))
+    return [0,
+        () => [currentText],
+        jsx => currentText !== jsx && (node.textContent = currentText = jsx),
+        () => node,
+        () => {},
+    ]
 }
