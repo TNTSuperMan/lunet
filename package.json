@@ -4,9 +4,19 @@
   "type": "module",
   "devDependencies": {
     "@types/bun": "latest",
-    "alien-signals": "^2.0.6"
+    "alien-signals": "^2.0.6",
+    "bunup": "^0.9.2"
   },
   "peerDependencies": {
     "typescript": "^5"
+  },
+  "bunup": {
+    "name": "llex",
+    "entry": ["src/index.ts"],
+    "format": ["esm"],
+    "target": "browser",
+    "sourcemap": "linked",
+    "minify": true,
+    "outDir": "dist"
   }
 }
