@@ -11,7 +11,7 @@ export type Attributes<N extends keyof HTMLElementTagNameMap, T extends object =
         $update: (this: HTMLElement, ev: CustomEvent<HTMLElementTagNameMap[N]>) => unknown;
         $beforeUnmount: (this: HTMLElement, ev: CustomEvent<HTMLElementTagNameMap[N]>) => unknown;
         $unmount: () => unknown;
-    } & Record<string, string>
+    }
 >;
 
 type HTMLAttributes = {
