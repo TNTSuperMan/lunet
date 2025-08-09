@@ -31,7 +31,14 @@ export const renderElement = (jsx: JSXElement): RenderedDOM<JSXElement> => {
                 case "string":
                     el.setAttribute(k, v);
                     break;
-                case "function": case "object":
+                case "function":
+                    if(k.startsWith("$")){
+                        if(!["$beforeMount", "$mount", "$beforeUnmount", "$unmount"].includes(k))
+                            el.addEventListener(k.substring(1), v as any);
+                    }else
+                        console.error("function values cannot mount on attributes.");
+                    break;
+                case "object":
                     if(v !== null)
                         console.error(`${typeof v} values cannot mount on attributes.`);
                     break;
