@@ -4,7 +4,7 @@ import { fragment } from "./fragment";
 
 type JSXFactoryFunction = <T extends keyof HTMLElementTagNameMap | Component<any> | typeof fragment>(
     type: T,
-    props: null | T extends Component<infer P> ? P : { [key: string]: unknown },
+    props: null | ( T extends Component<infer P> ? P : { [key: string]: unknown } ),
     ...children: JSXNode[]
 ) => JSXNode;
 
