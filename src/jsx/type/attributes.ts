@@ -1,7 +1,8 @@
+import type { Key } from "..";
 import type { HTMLElAttrEvMap } from "./eventmap";
 
 export type Attributes<N extends keyof HTMLElementTagNameMap, T extends object = {}> = Partial<
-    HTMLAttributes & T & {    
+    HTMLAttributes & T & Key & {    
         [key in keyof HTMLElAttrEvMap]:
             (this: HTMLElement, ev: HTMLElAttrEvMap[key]) => unknown;
     } & {
