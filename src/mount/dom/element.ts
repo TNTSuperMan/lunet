@@ -73,9 +73,12 @@ export const renderElement = (jsx: JSXElement): RenderedDOM<JSXElement> => {
     return [1,
         () => [currentJSX],
         jsx => {
+            Object.entries(jsx[1]).forEach(([name, value])=>{
+                if(element && (currentJSX[1] as any)[name] !== value)
+                    setAttribute(element, name, value);
+            });
+            console.warn("Warning: This feature is under active development and may change in future versions.");
             currentJSX = jsx;
-            /* TODO */
-            notImplementException();
         },
         () => {
             element && revokerMap.get(element)?.();
