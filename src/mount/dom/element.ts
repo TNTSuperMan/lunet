@@ -3,6 +3,43 @@ import type { JSXElement, JSXNode } from "../../jsx";
 import { revokerMap } from "../revokerMap";
 import { notImplementException } from "./notimplement";
 
+const setAttribute = (el: HTMLElement, name: string, value: unknown) => {
+    switch(name){
+        case "checked":
+            if(el instanceof HTMLInputElement && typeof value === "boolean"){
+                el.checked = value;
+                return;
+            }
+            break;
+        case "value":
+            if(el instanceof HTMLInputElement && typeof value === "string"){
+                el.value = value;
+                return;
+            }
+            break;
+    }
+    switch(typeof value){
+        case "string":
+            el.setAttribute(name, value);
+            break;
+        case "function":
+            if(name.startsWith("$")){
+                if(!["$beforeMount", "$mount", "$beforeUnmount", "$unmount"].includes(name))
+                    el.addEventListener(name.substring(1), value as any);
+            }else
+                console.error("function values cannot mount on attributes.");
+            break;
+        case "object":
+            if(value !== null)
+                console.error(`${typeof value} values cannot mount on attributes.`);
+            break;
+        default:
+            if(value !== undefined)
+                el.setAttribute(name, String(value));
+            break;
+    }
+}
+
 export const renderElement = (jsx: JSXElement): RenderedDOM<JSXElement> => {
     let currentJSX = jsx;
 
@@ -16,38 +53,7 @@ export const renderElement = (jsx: JSXElement): RenderedDOM<JSXElement> => {
         const el = document.createElement(tag);
         props.$mount?.call(el, new CustomEvent("mount", { detail: el as any }));
 
-        Object.entries(props).forEach(([k, v])=>{
-            switch(k){
-                case "checked":
-                    if(el instanceof HTMLInputElement && typeof v === "boolean")
-                        return el.checked = v;
-                    break;
-                case "value":
-                    if(el instanceof HTMLInputElement && typeof v === "string")
-                        return el.value = v;
-                    break;
-            }
-            switch(typeof v){
-                case "string":
-                    el.setAttribute(k, v);
-                    break;
-                case "function":
-                    if(k.startsWith("$")){
-                        if(!["$beforeMount", "$mount", "$beforeUnmount", "$unmount"].includes(k))
-                            el.addEventListener(k.substring(1), v as any);
-                    }else
-                        console.error("function values cannot mount on attributes.");
-                    break;
-                case "object":
-                    if(v !== null)
-                        console.error(`${typeof v} values cannot mount on attributes.`);
-                    break;
-                default:
-                    if(v !== undefined)
-                        el.setAttribute(k, String(v));
-                    break;
-            }
-        })
+        Object.entries(props).forEach(([name, value])=>setAttribute(el, name, value))
 
         rendered_children = children.map(renderNode);
         el.append(...rendered_children.map(e=>e[3]()));
