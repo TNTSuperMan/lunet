@@ -41,11 +41,15 @@ const setAttribute = (el: HTMLElement, name: string, value: unknown) => {
                 console.error("function values cannot mount on attributes.");
             break;
         case "object":
-            if(value !== null)
+            if(value === null)
+                el.removeAttribute(name);
+            else
                 console.error(`${typeof value} values cannot mount on attributes.`);
             break;
         default:
-            if(value !== undefined)
+            if(value === undefined)
+                el.removeAttribute(name);
+            else
                 el.setAttribute(name, String(value));
             break;
     }
