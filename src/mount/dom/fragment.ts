@@ -11,9 +11,17 @@ export const renderFragment = (jsx: JSXFragment): RenderedDOM<JSXFragment> => {
     return [2,
         () => rendered_children.flatMap(e=>e[1]()),
         jsx => {
-            currentJSX = jsx;
             /* TODO */
-            notImplementException();
+            const [,, ...old_children] = currentJSX;
+            const [,, ...new_children] = jsx;
+
+            rendered_children.map(e=>e[4]());
+
+            rendered_children = new_children.map(renderNode);
+            mark!.after(...rendered_children.map(e=>e[3]()));
+            
+            console.warn("Warning: This feature is under active development and may change in future versions.");
+            currentJSX = jsx;
         },
         () => {
             const [, props, ...children] = currentJSX;
