@@ -8,6 +8,6 @@ export const renderText = (jsx: string): RenderedDOM<string> => {
         () => [currentText],
         jsx => currentText !== jsx && (node.textContent = currentText = jsx),
         () => node,
-        () => {},
+        () => node.remove(),
     ]
 }
