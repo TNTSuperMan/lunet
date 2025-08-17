@@ -1,4 +1,4 @@
-import type { JSXNode } from "../../jsx";
+import type { JSXNode } from "../jsx";
 
 export const isCompatibleNode = (before: JSXNode, after: JSXNode): boolean => {
     if(typeof before === "string" || typeof after === "string"){

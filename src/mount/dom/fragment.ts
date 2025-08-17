@@ -1,6 +1,6 @@
 import { renderNode, type RenderedDOM, type UnknownRenderedDOM } from ".";
 import type { JSXFragment } from "../../jsx";
-import { notImplementException } from "./notimplement";
+import { notImplementException } from "../notimplement";
 
 export const renderFragment = (jsx: JSXFragment): RenderedDOM<JSXFragment> => {
     let currentJSX = jsx;
