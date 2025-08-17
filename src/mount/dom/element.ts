@@ -75,6 +75,7 @@ export const renderElement = (jsx: JSXElement): RenderedDOM<JSXElement> => {
 
             rendered_children.forEach(e=>e[3]());
             revokerMap.delete(el);
+            elementEvents.delete(el);
             el.remove();
             
             props.$unmount?.();
