@@ -3,6 +3,12 @@ import type { JSXElement, JSXNode } from "../../jsx";
 import { revokerMap } from "../revokerMap";
 import { notImplementException } from "./notimplement";
 
+const elementEvents: WeakMap<HTMLElement, Record<string, Function>> = new WeakMap;
+
+function handleEvent(this: HTMLElement, ev: Event){
+    return elementEvents.get(this)?.[ev.type]?.();
+}
+
 const setAttribute = (el: HTMLElement, name: string, value: unknown) => {
     switch(name){
         case "checked":
@@ -24,8 +30,13 @@ const setAttribute = (el: HTMLElement, name: string, value: unknown) => {
             break;
         case "function":
             if(name.startsWith("$")){
-                if(!["$beforeMount", "$mount", "$beforeUnmount", "$unmount"].includes(name))
-                    el.addEventListener(name.substring(1), value as any);
+                if(!["$beforeMount", "$mount", "$beforeUnmount", "$unmount"].includes(name)){
+                    const ev_name = name.substring(1);
+                    const events = elementEvents.get(el)!;
+                    if(!(ev_name in events))
+                        el.addEventListener(ev_name, handleEvent);
+                    events[ev_name] = value;
+                }
             }else
                 console.error("function values cannot mount on attributes.");
             break;
@@ -51,6 +62,7 @@ export const renderElement = (jsx: JSXElement): RenderedDOM<JSXElement> => {
 
         props.$beforeMount?.();
         const el = document.createElement(tag);
+        elementEvents.set(el, {});
         props.$mount?.call(el, new CustomEvent("mount", { detail: el as any }));
 
         Object.entries(props).forEach(([name, value])=>setAttribute(el, name, value))
