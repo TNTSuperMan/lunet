@@ -2,7 +2,7 @@ import { type RenderedDOM } from ".";
 import type { JSXComponent, JSXFragment, JSXNode } from "../../jsx";
 import { renderFragment } from "./fragment";
 
-export const renderComponent = (jsx: JSXComponent<object>): RenderedDOM<JSXComponent<object>> => {
+export const renderComponent = (jsx: JSXComponent): RenderedDOM<JSXComponent> => {
     let currentJSX = jsx;
 
     let rendered_dom = null as RenderedDOM<JSXFragment> | null;
