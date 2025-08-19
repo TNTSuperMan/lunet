@@ -115,6 +115,7 @@ export const renderElement = (jsx: JSXElement): RenderedDOM<JSXElement> => {
                     case 2:
                         rendered_children.splice(idx, 1);
                         element!.childNodes[idx].remove();
+                        break;
                 }
             })
 
