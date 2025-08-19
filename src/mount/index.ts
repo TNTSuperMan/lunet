@@ -10,5 +10,5 @@ export const render: RenderFunction = (el, jsx) => {
         e.remove();
     });
 
-    el.append(renderNode(jsx)[3]());
+    el.append(renderNode(jsx).render());
 }

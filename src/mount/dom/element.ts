@@ -73,12 +73,12 @@ export const renderElement = (jsx: JSXElement): RenderedDOM<JSXElement> => {
         Object.entries(props).forEach(([name, value])=>setAttribute(el, name, value))
 
         rendered_children = children.map(renderNode);
-        el.append(...rendered_children.map(e=>e[3]()));
+        el.append(...rendered_children.map(e=>e.render()));
 
         revokerMap.set(el, () => {
             props.$beforeUnmount?.call(el, new CustomEvent("beforeunmount", { detail: el as any }));
 
-            rendered_children.forEach(e=>e[3]());
+            rendered_children.forEach(e=>e.render());
             revokerMap.delete(el);
             elementEvents.delete(el);
             el.remove();
@@ -89,9 +89,10 @@ export const renderElement = (jsx: JSXElement): RenderedDOM<JSXElement> => {
         return element = el;
     }
 
-    return [1,
-        () => [currentJSX],
-        jsx => {
+    return {
+        type: 1,
+        flat: () => [currentJSX],
+        update(jsx){
             const [,, ...old_children] = currentJSX;
             const [, props, ...new_children] = jsx;
 
@@ -105,13 +106,13 @@ export const renderElement = (jsx: JSXElement): RenderedDOM<JSXElement> => {
                 switch(e[0]){
                     case 0:
                         var [, idx, jsx] = e;
-                        rendered_children[idx][2](jsx as any);
+                        rendered_children[idx].update(jsx as any);
                         break;
                     case 1:
                         var [, idx, jsx] = e;
                         const rendered = renderNode(jsx);
                         rendered_children.splice(idx, 0, rendered);
-                        element!.childNodes[rendered_children.reduce((p,c)=>p+c[1]().length, 0)]!.before(rendered[3]());
+                        element!.childNodes[rendered_children.reduce((p,c)=>p+c.flat().length, 0)]!.before(rendered.render());
                         break;
                     case 2:
                         var [, idx] = e;
@@ -123,10 +124,10 @@ export const renderElement = (jsx: JSXElement): RenderedDOM<JSXElement> => {
             console.warn("Warning: This feature is under active development and may change in future versions.");
             currentJSX = jsx;
         },
-        () => {
+        render(){
             element && revokerMap.get(element)?.();
             return render();
         },
-        () => element && revokerMap.get(element)?.(),
-    ]
+        revoke(){ element && revokerMap.get(element)?.() },
+    }
 }

@@ -10,20 +10,21 @@ export const renderComponent = (jsx: JSXComponent): RenderedDOM<JSXComponent> =>
     let props: object | null;
 
     const render = (jsx: JSXNode) => {
-        if(rendered_dom) rendered_dom[2]([null, {}, jsx]);
+        if(rendered_dom) rendered_dom.update([null, {}, jsx]);
         else rendered_dom = renderFragment([null, {}, jsx]);
     }
 
-    return [3,
-        () => rendered_dom?.[1]() ?? [],
-        jsx => {
+    return {
+        type: 3,
+        flat: () => rendered_dom?.flat() ?? [],
+        update(jsx){
             const [, afterProps/*, ...children*/] = currentJSX = jsx;
 
             Object.entries(afterProps).forEach(([k, v]) => //@ts-ignore
                 props[k] !== v && (props[k] = v));
         },
-        () => {
-            rendered_dom?.[4]();
+        render(){
+            rendered_dom?.revoke();
             rendered_dom = null;
 
             const [component, init_props/*, ...children*/] = currentJSX;
@@ -35,8 +36,8 @@ export const renderComponent = (jsx: JSXComponent): RenderedDOM<JSXComponent> =>
                 rendered_dom = renderFragment([null, {}, jsx]);
             }
 
-            return rendered_dom[3]();
+            return rendered_dom.render();
         },
-        () => rendered_dom?.[4](),
-    ]
+        revoke(){ rendered_dom?.revoke() },
+    }
 }
