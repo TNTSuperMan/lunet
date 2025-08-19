@@ -2,6 +2,7 @@ import { renderNode, type RenderedDOM, type UnknownRenderedDOM } from ".";
 import type { JSXElement, JSXNode } from "../../jsx";
 import { revokerMap } from "../revokerMap";
 import { notImplementException } from "../notimplement";
+import { diff } from "../diff";
 
 const elementEvents: WeakMap<HTMLElement, Record<string, Function>> = new WeakMap;
 
@@ -91,10 +92,34 @@ export const renderElement = (jsx: JSXElement): RenderedDOM<JSXElement> => {
     return [1,
         () => [currentJSX],
         jsx => {
-            Object.entries(jsx[1]).forEach(([name, value])=>{
+            const [,, ...old_children] = currentJSX;
+            const [, props, ...new_children] = jsx;
+
+            Object.entries(props).forEach(([name, value])=>{
                 if(element && (currentJSX[1] as any)[name] !== value)
                     setAttribute(element, name, value);
             });
+
+            const patches = diff(old_children, new_children);
+            patches.forEach(e=>{
+                switch(e[0]){
+                    case 0:
+                        var [, idx, jsx] = e;
+                        rendered_children[idx][2](jsx as any);
+                        break;
+                    case 1:
+                        var [, idx, jsx] = e;
+                        const rendered = renderNode(jsx);
+                        rendered_children.splice(idx, 0, rendered);
+                        element!.childNodes[rendered_children.reduce((p,c)=>p+c[1]().length, 0)]!.before(rendered[3]());
+                        break;
+                    case 2:
+                        var [, idx] = e;
+                        rendered_children.splice(idx, 1);
+                        element!.childNodes[idx].remove();
+                }
+            })
+
             console.warn("Warning: This feature is under active development and may change in future versions.");
             currentJSX = jsx;
         },
