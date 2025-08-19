@@ -19,10 +19,10 @@ export const renderFragment = (jsx: JSXFragment): RenderedDOM<JSXFragment> => {
 
             const patches = diff(old_children, new_children);
 
-            patches.forEach(e=>{
-                switch(e[0]){
+            patches.forEach(([type, idx, jsx])=>{
+                switch(type){
                     case 0:
-                        rendered_children[e[1]].update(e[2] as any);
+                        rendered_children[idx].update(jsx as any);
                         break;
                     case 1:
                         notImplementException();

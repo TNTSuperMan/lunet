@@ -8,7 +8,7 @@ export const isCompatibleNode = (before: JSXNode, after: JSXNode): boolean =>
 export type Patch =
     | [0, number, JSXNode] // 更新
     | [1, number, JSXNode] // 挿入
-    | [2, number] // 削除
+    | [2, number, JSXNode] // 削除
 
 export const diff = (
     before_nodes: JSXNode[],
@@ -24,12 +24,12 @@ export const diff = (
         if(!before && after)
             patches.push([1, i, after]);
         else if(before && !after)
-            patches.push([2, i]);
+            patches.push([2, i, after]);
         else if(before && after)
             if(isCompatibleNode(before, after))
                 patches.push([0, i, after]);
             else{
-                patches.push([2, i]);
+                patches.push([2, i, after]);
                 patches.push([1, i, after]);
             }
     }

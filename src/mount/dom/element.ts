@@ -102,20 +102,17 @@ export const renderElement = (jsx: JSXElement): RenderedDOM<JSXElement> => {
             });
 
             const patches = diff(old_children, new_children);
-            patches.forEach(e=>{
-                switch(e[0]){
+            patches.forEach(([type, idx, jsx])=>{
+                switch(type){
                     case 0:
-                        var [, idx, jsx] = e;
                         rendered_children[idx].update(jsx as any);
                         break;
                     case 1:
-                        var [, idx, jsx] = e;
                         const rendered = renderNode(jsx);
                         rendered_children.splice(idx, 0, rendered);
                         element!.childNodes[rendered_children.reduce((p,c)=>p+c.flat().length, 0)]!.before(rendered.render());
                         break;
                     case 2:
-                        var [, idx] = e;
                         rendered_children.splice(idx, 1);
                         element!.childNodes[idx].remove();
                 }
