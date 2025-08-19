@@ -1,5 +1,6 @@
 import { renderNode, type RenderedDOM, type UnknownRenderedDOM } from ".";
 import type { JSXFragment } from "../../jsx";
+import { diff } from "../diff";
 import { notImplementException } from "../notimplement";
 
 export const renderFragment = (jsx: JSXFragment): RenderedDOM<JSXFragment> => {
@@ -15,10 +16,21 @@ export const renderFragment = (jsx: JSXFragment): RenderedDOM<JSXFragment> => {
             const [,, ...old_children] = currentJSX;
             const [,, ...new_children] = jsx;
 
-            rendered_children.map(e=>e[4]());
+            const patches = diff(old_children, new_children);
 
-            rendered_children = new_children.map(renderNode);
-            mark!.after(...rendered_children.map(e=>e[3]()));
+            patches.forEach(e=>{
+                switch(e[0]){
+                    case 0:
+                        rendered_children[e[1]][2](e[2] as any);
+                        break;
+                    case 1:
+                        notImplementException();
+                        break;
+                    case 2:
+                        notImplementException();
+                        break;
+                }
+            })
             
             console.warn("Warning: This feature is under active development and may change in future versions.");
             currentJSX = jsx;
