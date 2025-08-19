@@ -21,13 +21,17 @@ export const diff = (
         const before = before_nodes[i];
         const after = after_nodes[i];
         
-        if(!before && after){
+        if(!before && after)
             patches.push([1, i, after]);
-        }else if(before && !after){
+        else if(before && !after)
             patches.push([2, i]);
-        }else if(before && after && !isCompatibleNode(before, after)){
-            patches.push([0, i, after]);
-        }
+        else if(before && after)
+            if(isCompatibleNode(before, after))
+                patches.push([0, i, after]);
+            else{
+                patches.push([2, i]);
+                patches.push([1, i, after]);
+            }
     }
 
     return patches;
