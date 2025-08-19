@@ -130,7 +130,6 @@ export const renderElement = (jsx: JSXElement): RenderedDOM<JSXElement> => {
                 }
             })
 
-            console.warn("Warning: This feature is under active development and may change in future versions.");
             currentJSX = jsx;
         },
         render(){

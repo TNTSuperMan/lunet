@@ -33,7 +33,6 @@ export const renderFragment = (jsx: JSXFragment): RenderedDOM<JSXFragment> => {
                 }
             })
             
-            console.warn("Warning: This feature is under active development and may change in future versions.");
             currentJSX = jsx;
         },
         render(){
