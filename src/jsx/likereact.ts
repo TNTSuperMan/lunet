@@ -12,5 +12,5 @@ export const h: JSXFactoryFunction = (type, props, ...children) =>
     typeof type === "string" ?
         [type, props ?? {}, ...children] :
         type === fragment ?
-            fragment(props, ...children) :
+            [null, props ?? {}, ...children] :
             type(props);

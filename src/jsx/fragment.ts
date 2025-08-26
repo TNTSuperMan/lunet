@@ -1,4 +1,4 @@
 import type { JSXFragment, JSXNode } from ".";
 
-export const fragment = (props?: null | { key?: unknown }, ...children: JSXNode[]): JSXFragment =>
-    [null, props ?? {}, ...children];
+export const fragment = (...children: JSXNode[]): JSXFragment =>
+    [null, {}, ...children];
