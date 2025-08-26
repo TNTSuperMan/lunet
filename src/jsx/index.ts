@@ -7,7 +7,7 @@ export type JSXElement<T extends keyof HTMLElementTagNameMap = keyof HTMLElement
 export type JSXComponent = [ComponentFunction<any>, object & Key, ...JSXNode[]];
 export type JSXFragment = [null, Key, ...JSXNode[]];
 
-export type { Component } from "./component";
+export { type Component, createComponent } from "./component";
 export { jsx } from "./element";
 export { fragment } from "./fragment";
 export { h } from "./likereact";
