@@ -26,14 +26,11 @@ export const renderFragment = (jsx: JSXFragment): RenderedDOM<JSXFragment> => {
                         rendered_children[idx].update(jsx as any);
                         break;
                     case 1:
-                        // 挿入
                         const rendered = renderNode(jsx);
                         rendered_children.splice(idx, 0, rendered);
                         const dom = rendered.render();
-                        // 挿入位置を決定
-                        let refNode: ChildNode | null = null;
+                        let refNode: ChildNode | null = null; // TODO: ここら辺を最適化する
                         if (mark && mark.parentNode) {
-                            // markの次から子ノードを数えてidx番目を探す
                             let node: ChildNode | null = mark.nextSibling;
                             let count = 0;
                             while (node) {
