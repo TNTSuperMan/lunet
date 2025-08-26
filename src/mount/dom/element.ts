@@ -1,7 +1,6 @@
 import { renderNode, type RenderedDOM, type UnknownRenderedDOM } from ".";
 import type { JSXElement, JSXNode } from "../../jsx";
 import { revokerMap } from "../revokerMap";
-import { notImplementException } from "../notimplement";
 import { diff } from "../diff";
 
 const elementEvents: WeakMap<HTMLElement, Record<string, Function>> = new WeakMap;
