@@ -1,4 +1,29 @@
 # llex
+より柔軟なWebフロントエンドフレームワーク。
+
+## 使い方のサンプル
+```jsx
+import { createComponent, render } from "../llex";
+import { signal, effect } from "alien-signals";
+
+const App = createComponent((render, init) => {
+    const msg = signal(init.msg);
+    const count = signal(0);
+
+    effect(() => {
+        render(<div class="app">
+            <button $click={()=>count(count()+1)}>{msg()} {count().toString()}</button>
+        </div>)
+    });
+
+    return {
+        set msg(value){ msg(value) }
+    }
+})
+
+render(document.getElementById("root"), <App msg="Count:" />);
+
+```
 
 To install dependencies:
 
