@@ -16,14 +16,14 @@ export const bun_llex = (importSource: string = "llex"): BunPlugin => ({
         build.onLoad({ filter: /\.jsx$/ }, async args => {
             const code = await readFile(args.path);
             return ({
-                contents: transpile(code, importSource, { sourceType: "unambiguous", plugins: ["jsx"] }),
+                contents: transpile(code, importSource, false),
                 loader: "jsx"
             });
         });
         build.onLoad({ filter: /\.tsx$/ }, async args => {
             const code = await readFile(args.path);
             return ({
-                contents: transpile(code, importSource, { sourceType: "unambiguous", plugins: ["typescript", "jsx"] }),
+                contents: transpile(code, importSource, true),
                 loader: "tsx"
             });
         });
@@ -36,18 +36,12 @@ export const rollup_llex = (importSource: string = "llex"): RollupPlugin => ({
         if(id.endsWith(".jsx")){
             const code = readFileSync(id).toString();
             return {
-                code: transpile(code, importSource, {
-                    sourceType: "unambiguous",
-                    plugins: ["jsx"]
-                })
+                code: transpile(code, importSource, false)
             };
         }else if(id.endsWith(".tsx")){
             const code = readFileSync(id).toString();
             return {
-                code: transpile(code, importSource, {
-                    sourceType: "unambiguous",
-                    plugins: ["typescript", "jsx"]
-                })
+                code: transpile(code, importSource, true)
             };
         }
     }

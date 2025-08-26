@@ -91,8 +91,11 @@ const jsx2Expression = (
     }
 }
 
-export const transpile = (code: string, importSource: string, options: Exclude<Parameters<typeof parse>[1], undefined>) => {
-    const ast = parse(code, options);
+export const transpile = (code: string, importSource: string, isTypeScript: boolean) => {
+    const ast = parse(code, {
+        sourceType: "module",
+        plugins: isTypeScript ? ["typescript", "jsx"] : ["jsx"]
+    });
 
     const identifiers = new Set<string>();
     traverse(ast, {
