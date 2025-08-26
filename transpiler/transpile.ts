@@ -91,7 +91,7 @@ const jsx2Expression = (
     }
 }
 
-export const transpile = (code: string, options: Exclude<Parameters<typeof parse>[1], undefined>) => {
+export const transpile = (code: string, importSource: string, options: Exclude<Parameters<typeof parse>[1], undefined>) => {
     const ast = parse(code, options);
 
     const identifiers = new Set<string>();
@@ -103,6 +103,13 @@ export const transpile = (code: string, options: Exclude<Parameters<typeof parse
 
     const jsx_identifier = generateUniqueName("jsx", identifiers);
     const fragment_identifier = generateUniqueName("fragment", identifiers);
+
+    ast.program.body.unshift(
+        t.importDeclaration([
+            t.importSpecifier(t.identifier(jsx_identifier), t.identifier("jsx")),
+            t.importSpecifier(t.identifier(fragment_identifier), t.identifier("fragment"))
+        ], t.stringLiteral(importSource))
+    );
 
     traverse(ast, {
         JSXElement(ast){

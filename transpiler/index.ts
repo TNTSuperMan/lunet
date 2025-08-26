@@ -10,33 +10,33 @@ const readFile: (path: string) => Promise<string> =
         path => Bun.file(path).text() :
         path => NodeReadFile(path).then(e=>e.toString());
 
-export const bun_llex: BunPlugin = {
+export const bun_llex = (importSource: string = "llex"): BunPlugin => ({
     name: "bun-llex",
     setup(build) {
         build.onLoad({ filter: /\.jsx$/ }, async args => {
             const code = await readFile(args.path);
             return ({
-                contents: transpile(code, { sourceType: "unambiguous", plugins: ["jsx"] }),
+                contents: transpile(code, importSource, { sourceType: "unambiguous", plugins: ["jsx"] }),
                 loader: "jsx"
             });
         });
         build.onLoad({ filter: /\.tsx$/ }, async args => {
             const code = await readFile(args.path);
             return ({
-                contents: transpile(code, { sourceType: "unambiguous", plugins: ["typescript", "jsx"] }),
+                contents: transpile(code, importSource, { sourceType: "unambiguous", plugins: ["typescript", "jsx"] }),
                 loader: "tsx"
             });
         });
     },
-}
+})
 
-export const rollup_llex: RollupPlugin = {
+export const rollup_llex = (importSource: string = "llex"): RollupPlugin => ({
     name: "rollup-llex",
     load(id){
         if(id.endsWith(".jsx")){
             const code = readFileSync(id).toString();
             return {
-                code: transpile(code, {
+                code: transpile(code, importSource, {
                     sourceType: "unambiguous",
                     plugins: ["jsx"]
                 })
@@ -44,13 +44,13 @@ export const rollup_llex: RollupPlugin = {
         }else if(id.endsWith(".tsx")){
             const code = readFileSync(id).toString();
             return {
-                code: transpile(code, {
+                code: transpile(code, importSource, {
                     sourceType: "unambiguous",
                     plugins: ["typescript", "jsx"]
                 })
             };
         }
     }
-}
+})
 
 export { transpile };
