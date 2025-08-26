@@ -13,22 +13,48 @@ export const renderFragment = (jsx: JSXFragment): RenderedDOM<JSXFragment> => {
         type: 2,
         flat: () => rendered_children.flatMap(e=>e.flat()),
         update(jsx){
-            /* TODO */
             const [,, ...old_children] = currentJSX;
             const [,, ...new_children] = jsx;
 
             const patches = diff(old_children, new_children);
+            let removes = 0;
 
-            patches.forEach(([type, idx, jsx])=>{
+            patches.forEach(([type, idx_, jsx])=>{
+                const idx = idx_ - removes;
                 switch(type){
                     case 0:
                         rendered_children[idx].update(jsx as any);
                         break;
                     case 1:
-                        notImplementException();
+                        // 挿入
+                        const rendered = renderNode(jsx);
+                        rendered_children.splice(idx, 0, rendered);
+                        const dom = rendered.render();
+                        // 挿入位置を決定
+                        let refNode: ChildNode | null = null;
+                        if (mark && mark.parentNode) {
+                            // markの次から子ノードを数えてidx番目を探す
+                            let node: ChildNode | null = mark.nextSibling;
+                            let count = 0;
+                            while (node) {
+                                if (count === idx) {
+                                    refNode = node;
+                                    break;
+                                }
+                                node = node.nextSibling;
+                                count++;
+                            }
+                            if (refNode) {
+                                mark.parentNode.insertBefore(dom, refNode);
+                            } else {
+                                mark.parentNode.appendChild(dom);
+                            }
+                        }
                         break;
                     case 2:
-                        notImplementException();
+                        removes++;
+                        const [removed] = rendered_children.splice(idx, 1);
+                        removed.revoke();
                         break;
                 }
             })
