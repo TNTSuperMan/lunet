@@ -91,7 +91,7 @@ const jsx2Expression = (
     }
 }
 
-export const transpile = (code: string, importSource: string, isTypeScript: boolean) => {
+export const transpile = (code: string, importSource: string, isTypeScript: boolean): string => {
     const ast = parse(code, {
         sourceType: "module",
         plugins: isTypeScript ? ["typescript", "jsx"] : ["jsx"]
