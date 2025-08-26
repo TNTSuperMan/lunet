@@ -3,7 +3,7 @@
 
 ## 使い方のサンプル
 ```jsx
-import { createComponent, render } from "../llex";
+import { createComponent, render } from "llex";
 import { signal, effect } from "alien-signals";
 
 const App = createComponent((render, init) => {
