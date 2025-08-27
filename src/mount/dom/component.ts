@@ -33,7 +33,7 @@ export const renderComponent = (jsx: JSXComponent): RenderedDOM<JSXComponent> =>
 
             if(!rendered_dom) {
                 console.error("never rendered Initial render.");
-                rendered_dom = renderFragment([null, {}, jsx]);
+                rendered_dom = renderFragment([null, {}]);
             }
 
             return rendered_dom.render();
