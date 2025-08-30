@@ -58,7 +58,7 @@ export const renderFragment = (jsx: JSXFragment): RenderedDOM<JSXFragment> => {
             currentJSX = jsx;
         },
         render(){
-            const [, props, ...children] = currentJSX;
+            const [,, ...children] = currentJSX;
 
             const el = document.createDocumentFragment();
             mark = document.createComment("");
