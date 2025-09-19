@@ -29,7 +29,7 @@ export const renderComponent = (jsx: JSXComponent): RenderedDOM<JSXComponent> =>
 
             const [component, init_props/*, ...children*/] = currentJSX;
 
-            props = component(render, init_props);
+            props = component(render, { ...init_props });
 
             if(!rendered_dom) {
                 console.error("never rendered Initial render.");
