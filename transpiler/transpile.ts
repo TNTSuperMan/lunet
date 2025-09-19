@@ -20,6 +20,11 @@ const jsxAttr2Object = (
         : t.spreadElement(e.argument)
 ));
 
+const jsxMemberToMemberExpression = (ast: t.JSXMemberExpression | t.JSXIdentifier): t.MemberExpression | t.Identifier =>
+    ast.type === "JSXIdentifier"
+        ? t.identifier(ast.name)
+        : t.memberExpression(jsxMemberToMemberExpression(ast.object), jsxMemberToMemberExpression(ast.property));
+
 const filterEmptyString = (ast: t.Expression | t.SpreadElement) => !(ast.type === "StringLiteral" && !ast.value);
 
 const jsx2Elements = (
@@ -72,8 +77,15 @@ const jsx2Expression = (
                     return t.callExpression(t.identifier(tag.name), [
                         jsxAttr2Object(ast.openingElement.attributes)
                     ]);
-                default:
-                    throw new Error("not implemented");
+                case "JSXMemberExpression":
+                    return t.callExpression(jsxMemberToMemberExpression(tag), [
+                        jsxAttr2Object(ast.openingElement.attributes)
+                    ]);
+                case "JSXNamespacedName":
+                    console.warn("Warning: JSXNamespacedName is not supported");
+                    return t.callExpression(t.identifier(tag.name.name), [
+                        jsxAttr2Object(ast.openingElement.attributes)
+                    ]);
             }
         case "JSXExpressionContainer": switch(ast.expression.type){
                 case "JSXEmptyExpression":
