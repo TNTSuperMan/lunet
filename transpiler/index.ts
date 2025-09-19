@@ -6,9 +6,9 @@ import type { BunPlugin } from "bun";
 import type { Plugin as RollupPlugin } from "rollup";
 
 const readFile: (path: string) => Promise<string> =
-    process.isBun ?
-        path => Bun.file(path).text() :
-        path => NodeReadFile(path).then(e=>e.toString());
+    process.isBun
+        ? path => Bun.file(path).text()
+        : path => NodeReadFile(path).then(e=>e.toString());
 
 export const bun_llex = (): BunPlugin => ({
     name: "bun-llex",

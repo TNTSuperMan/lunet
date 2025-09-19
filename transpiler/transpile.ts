@@ -6,18 +6,18 @@ import * as t from "@babel/types";
 const jsxAttr2Object = (
     ast: (t.JSXAttribute | t.JSXSpreadAttribute)[],
 ): t.ObjectExpression => t.objectExpression(ast.map(e=>
-    e.type === "JSXAttribute" ?
-        t.objectProperty(
+    e.type === "JSXAttribute"
+        ? t.objectProperty(
             t.identifier(
-                e.name.type === "JSXIdentifier" ?
-                    e.name.name :
-                    e.name.name.name),
-            e.value ?
-                e.value.type === "StringLiteral" ?
-                    e.value :
-                    jsx2Expression(e.value, true) :
-                t.booleanLiteral(true)) :
-        t.spreadElement(e.argument)
+                e.name.type === "JSXIdentifier"
+                    ? e.name.name
+                    : e.name.name.name),
+            e.value
+                ? e.value.type === "StringLiteral"
+                    ? e.value
+                    : jsx2Expression(e.value, true)
+                : t.booleanLiteral(true))
+        : t.spreadElement(e.argument)
 ));
 
 const filterEmptyString = (ast: t.Expression | t.SpreadElement) => !(ast.type === "StringLiteral" && !ast.value);
