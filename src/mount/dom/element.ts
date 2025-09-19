@@ -79,7 +79,7 @@ export const renderElement = (jsx: JSXElement): RenderedDOM<JSXElement> => {
         revokerMap.set(el, () => {
             props.$beforeUnmount?.call(el, new CustomEvent("beforeunmount", { detail: el as any }));
 
-            rendered_children.forEach(e=>e.render());
+            rendered_children.forEach(e=>e.revoke());
             revokerMap.delete(el);
             elementEvents.delete(el);
             el.remove();
