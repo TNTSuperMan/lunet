@@ -10,38 +10,38 @@ const readFile: (path: string) => Promise<string> =
         path => Bun.file(path).text() :
         path => NodeReadFile(path).then(e=>e.toString());
 
-export const bun_llex = (importSource: string = "llex"): BunPlugin => ({
+export const bun_llex = (): BunPlugin => ({
     name: "bun-llex",
     setup(build) {
         build.onLoad({ filter: /\.jsx$/ }, async args => {
             const code = await readFile(args.path);
             return ({
-                contents: transpile(code, importSource, false),
+                contents: transpile(code, false),
                 loader: "jsx"
             });
         });
         build.onLoad({ filter: /\.tsx$/ }, async args => {
             const code = await readFile(args.path);
             return ({
-                contents: transpile(code, importSource, true),
+                contents: transpile(code, true),
                 loader: "tsx"
             });
         });
     },
 })
 
-export const rollup_llex = (importSource: string = "llex"): RollupPlugin => ({
+export const rollup_llex = (): RollupPlugin => ({
     name: "rollup-llex",
     load(id){
         if(id.endsWith(".jsx")){
             const code = readFileSync(id).toString();
             return {
-                code: transpile(code, importSource, false)
+                code: transpile(code, false)
             };
         }else if(id.endsWith(".tsx")){
             const code = readFileSync(id).toString();
             return {
-                code: transpile(code, importSource, true)
+                code: transpile(code, true)
             };
         }
     }
