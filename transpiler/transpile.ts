@@ -109,13 +109,6 @@ export const transpile = (code: string, isTypeScript: boolean): string => {
         plugins: isTypeScript ? ["typescript", "jsx"] : ["jsx"]
     });
 
-    const identifiers = new Set<string>();
-    traverse(ast, {
-        Identifier(ast){
-            identifiers.add(ast.node.name);
-        }
-    });
-
     traverse(ast, {
         JSXElement(ast){
             ast.replaceWith(jsx2Expression(ast.node));
@@ -124,5 +117,6 @@ export const transpile = (code: string, isTypeScript: boolean): string => {
             ast.replaceWith(jsx2Expression(ast.node));
         }
     });
+    
     return generate(ast).code;
 }
