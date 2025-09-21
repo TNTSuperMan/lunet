@@ -18,7 +18,7 @@ export const renderFragment = (jsx: JSXFragment): RenderedDOM<JSXFragment> => {
             const patches = diff(old_children, new_children);
             let removes = 0;
 
-            patches.forEach(([type, idx_, jsx])=>{
+            for (const [type, idx_, jsx] of patches) {
                 const idx = idx_ - removes;
                 switch(type){
                     case 0:
@@ -53,7 +53,7 @@ export const renderFragment = (jsx: JSXFragment): RenderedDOM<JSXFragment> => {
                         removed.revoke();
                         break;
                 }
-            })
+            }
             
             currentJSX = jsx;
         },
@@ -68,6 +68,9 @@ export const renderFragment = (jsx: JSXFragment): RenderedDOM<JSXFragment> => {
 
             return el;
         },
-        revoke(){ rendered_children.forEach(e=>e.revoke()) },
+        revoke(){
+            for (const child of rendered_children)
+                child.revoke();
+        },
     }
 }

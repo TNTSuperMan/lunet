@@ -20,8 +20,9 @@ export const renderComponent = (jsx: JSXComponent): RenderedDOM<JSXComponent> =>
         update(jsx){
             const [, afterProps/*, ...children*/] = currentJSX = jsx;
 
-            Object.entries(afterProps).forEach(([k, v]) =>
-                props![k] !== v && (props![k] = v));
+            for (const [key, value] of Object.entries(afterProps))
+                if (props![key] !== value)
+                    props![key] = value;
         },
         render(){
             rendered_dom?.revoke();

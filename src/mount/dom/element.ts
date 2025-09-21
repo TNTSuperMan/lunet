@@ -71,7 +71,8 @@ export const renderElement = (jsx: JSXElement): RenderedDOM<JSXElement> => {
         elementEvents.set(el, {});
         props.$mount?.call(el, new CustomEvent("mount", { detail: el as any }));
 
-        Object.entries(props).forEach(([name, value])=>setAttribute(el, name, value))
+        for (const [name, value] of Object.entries(props))
+            setAttribute(el, name, value);
 
         rendered_children = children.map(renderNode);
         el.append(...rendered_children.map(e=>e.render()));
@@ -79,7 +80,8 @@ export const renderElement = (jsx: JSXElement): RenderedDOM<JSXElement> => {
         revokerMap.set(el, () => {
             props.$beforeUnmount?.call(el, new CustomEvent("beforeunmount", { detail: el as any }));
 
-            rendered_children.forEach(e=>e.revoke());
+            for (const child of rendered_children)
+                child.revoke();
             revokerMap.delete(el);
             elementEvents.delete(el);
             el.remove();
@@ -97,14 +99,13 @@ export const renderElement = (jsx: JSXElement): RenderedDOM<JSXElement> => {
             const [,, ...old_children] = currentJSX;
             const [, props, ...new_children] = jsx;
 
-            Object.entries(props).forEach(([name, value])=>{
-                if(element && (currentJSX[1] as any)[name] !== value)
-                    setAttribute(element, name, value);
-            });
+            for (const [name, value] of Object.entries(props))
+                if((currentJSX[1] as any)[name] !== value)
+                    setAttribute(element!, name, value);
 
             const patches = diff(old_children, new_children);
             let removes = 0;
-            patches.forEach(([type, idx_, jsx])=>{
+            for (const [type, idx_, jsx] of patches) {
                 const idx = idx_ - removes;
                 switch(type){
                     case 0:
@@ -128,7 +129,7 @@ export const renderElement = (jsx: JSXElement): RenderedDOM<JSXElement> => {
                         rendered_children.splice(idx, 1)[0].revoke();
                         break;
                 }
-            })
+            }
 
             currentJSX = jsx;
         },
