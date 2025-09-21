@@ -1,0 +1,30 @@
+{
+  "name": "lunet",
+  "version": "0.0.0",
+  "author": "TNTSuperMan",
+  "license": "MIT",
+  "description": "より柔軟なWebフロントエンドライブラリ。",
+  "module": "dist/index.js",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TNTSuperMan/lunet.git"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js",
+      "browser": "./dist/index.js",
+      "import": "./dist/index.js"
+    }
+  },
+  "bunup": {
+    "name": "lunet",
+    "entry": ["src/index.ts"],
+    "format": ["esm"],
+    "target": "browser",
+    "sourcemap": "linked",
+    "minify": true,
+    "outDir": "dist"
+  }
+}

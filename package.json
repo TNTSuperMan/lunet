@@ -1,10 +1,10 @@
 {
-  "name": "lunet",
+  "name": "lunet-workspace",
+  "private": true,
   "version": "0.0.0",
   "author": "TNTSuperMan",
   "license": "MIT",
   "description": "より柔軟なWebフロントエンドライブラリ。",
-  "module": "src/index.ts",
   "type": "module",
   "devDependencies": {
     "@types/babel__generator": "^7.27.0",
@@ -18,42 +18,7 @@
   "peerDependencies": {
     "typescript": "^5.9.2"
   },
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js",
-      "browser": "./dist/index.js",
-      "import": "./dist/index.js"
-    },
-    "./transpiler": {
-      "types": "./dist/transpiler/index.d.ts",
-      "default": "./dist/transpiler/index.js",
-      "require": "./dist/transpiler/index.cjs",
-      "import": "./dist/transpiler/index.js",
-      "node": "./dist/transpiler/index.cjs"
-    }
-  },
-  "bunup": [{
-    "name": "lunet",
-    "entry": ["src/index.ts"],
-    "format": ["esm"],
-    "target": "browser",
-    "sourcemap": "linked",
-    "minify": true,
-    "outDir": "dist"
-  },{
-    "name": "lunet-transpiler",
-    "entry": ["transpiler/index.ts"],
-    "external": ["@babel/generator", "@babel/parser", "@babel/traverse", "@babel/types"],
-    "format": ["esm", "cjs"],
-    "target": "node",
-    "minify": true,
-    "outDir": "dist/transpiler"
-  }],
-  "dependencies": {
-    "@babel/generator": "^7.28.3",
-    "@babel/parser": "^7.28.3",
-    "@babel/traverse": "^7.28.3",
-    "@babel/types": "^7.28.2"
-  }
+  "workspaces": [
+    "packages/*"
+  ]
 }
