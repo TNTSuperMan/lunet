@@ -3,8 +3,14 @@
 
 ## 使い方のサンプル
 ```jsx
-import { createComponent, render } from "llex";
-import { signal, effect } from "alien-signals";
+import { createComponent, render, setBatch } from "llex";
+import { signal, effect, startBatch, endBatch } from "alien-signals";
+
+setBatch(cb => {
+    startBatch();
+    cb();
+    endBatch();
+});
 
 const App = createComponent((render, init) => {
     const msg = signal(init.msg);

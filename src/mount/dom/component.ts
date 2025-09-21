@@ -1,4 +1,5 @@
 import { type RenderedDOM } from ".";
+import { batch } from "../../batch";
 import type { JSXComponent, JSXFragment, JSXNode } from "../../jsx";
 import { renderFragment } from "./fragment";
 
@@ -20,9 +21,11 @@ export const renderComponent = (jsx: JSXComponent): RenderedDOM<JSXComponent> =>
         update(jsx){
             const [, afterProps/*, ...children*/] = currentJSX = jsx;
 
-            for (const [key, value] of Object.entries(afterProps))
-                if (props![key] !== value)
-                    props![key] = value;
+            batch(() => {
+                for (const [key, value] of Object.entries(afterProps))
+                    if (props![key] !== value)
+                        props![key] = value;
+            });
         },
         render(){
             rendered_dom?.revoke();
