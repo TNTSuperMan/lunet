@@ -7,7 +7,7 @@ export const renderComponent = (jsx: JSXComponent): RenderedDOM<JSXComponent> =>
 
     let rendered_dom = null as RenderedDOM<JSXFragment> | null;
 
-    let props: object | null;
+    let props: { [key: string]: unknown } | null;
 
     const render = (jsx: JSXNode) => {
         if(rendered_dom) rendered_dom.update([null, {}, jsx]);
@@ -20,8 +20,8 @@ export const renderComponent = (jsx: JSXComponent): RenderedDOM<JSXComponent> =>
         update(jsx){
             const [, afterProps/*, ...children*/] = currentJSX = jsx;
 
-            Object.entries(afterProps).forEach(([k, v]) => //@ts-ignore
-                props[k] !== v && (props[k] = v));
+            Object.entries(afterProps).forEach(([k, v]) =>
+                props![k] !== v && (props![k] = v));
         },
         render(){
             rendered_dom?.revoke();
