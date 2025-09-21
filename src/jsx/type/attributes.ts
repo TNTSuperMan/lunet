@@ -1,4 +1,4 @@
-import type { Key } from "..";
+import type { Key } from "../index";
 import type { HTMLElAttrEvMap } from "./eventmap";
 
 export type Attributes<N extends keyof HTMLElementTagNameMap, T extends object = {}> = Partial<

@@ -1,5 +1,5 @@
 import type { Attributes } from "./attributes";
-import type { JSXNode } from "..";
+import type { JSXNode } from "../index";
 
 type Target = "_self" | "_blank" | "_parent" | "_top";
 
