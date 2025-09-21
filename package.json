@@ -1,9 +1,9 @@
 {
-  "name": "llex",
+  "name": "lunet",
   "version": "0.0.0",
   "author": "TNTSuperMan",
   "license": "MIT",
-  "description": "より柔軟なWebフロントエンドフレームワーク。",
+  "description": "より柔軟なWebフロントエンドライブラリ。",
   "module": "src/index.ts",
   "type": "module",
   "devDependencies": {
@@ -34,7 +34,7 @@
     }
   },
   "bunup": [{
-    "name": "llex",
+    "name": "lunet",
     "entry": ["src/index.ts"],
     "format": ["esm"],
     "target": "browser",
@@ -42,7 +42,7 @@
     "minify": true,
     "outDir": "dist"
   },{
-    "name": "llex-transpiler",
+    "name": "lunet-transpiler",
     "entry": ["transpiler/index.ts"],
     "external": ["@babel/generator", "@babel/parser", "@babel/traverse", "@babel/types"],
     "format": ["esm", "cjs"],

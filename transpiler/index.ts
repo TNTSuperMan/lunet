@@ -10,8 +10,8 @@ const readFile: (path: string) => Promise<string> =
         ? path => Bun.file(path).text()
         : path => NodeReadFile(path).then(e=>e.toString());
 
-export const bun_llex = (): BunPlugin => ({
-    name: "bun-llex",
+export const bun_lunet = (): BunPlugin => ({
+    name: "bun-lunet",
     setup(build) {
         build.onLoad({ filter: /\.jsx$/ }, async args => {
             const code = await readFile(args.path);
@@ -30,8 +30,8 @@ export const bun_llex = (): BunPlugin => ({
     },
 })
 
-export const rollup_llex = (): RollupPlugin => ({
-    name: "rollup-llex",
+export const rollup_lunet = (): RollupPlugin => ({
+    name: "rollup-lunet",
     load(id){
         if(id.endsWith(".jsx")){
             const code = readFileSync(id).toString();

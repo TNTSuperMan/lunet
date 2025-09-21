@@ -2,7 +2,7 @@
   "lockfileVersion": 1,
   "workspaces": {
     "": {
-      "name": "llex",
+      "name": "lunet",
       "dependencies": {
         "@babel/generator": "^7.28.3",
         "@babel/parser": "^7.28.3",

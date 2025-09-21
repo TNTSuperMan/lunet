@@ -1,9 +1,9 @@
-# llex
-より柔軟なWebフロントエンドフレームワーク。
+# lunet
+より柔軟なWebフロントエンドライブラリ。
 
 ## 使い方のサンプル
 ```jsx
-import { createComponent, render, setBatch } from "llex";
+import { createComponent, render, setBatch } from "lunet";
 import { signal, effect, startBatch, endBatch } from "alien-signals";
 
 setBatch(cb => {
