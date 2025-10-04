@@ -7,10 +7,10 @@ export type Attributes<N extends keyof HTMLElementTagNameMap, T extends object =
             (this: HTMLElement, ev: HTMLElAttrEvMap[key]) => unknown;
     } & {
         $beforeMount: () => unknown;
-        $mount: (this: HTMLElement, ev: CustomEvent<HTMLElementTagNameMap[N]>) => unknown;
-        $beforeUpdate: (this: HTMLElement, ev: CustomEvent<HTMLElementTagNameMap[N]>) => unknown;
-        $update: (this: HTMLElement, ev: CustomEvent<HTMLElementTagNameMap[N]>) => unknown;
-        $beforeUnmount: (this: HTMLElement, ev: CustomEvent<HTMLElementTagNameMap[N]>) => unknown;
+        $mount:         (this: HTMLElementTagNameMap[N], ev: CustomEvent<HTMLElementTagNameMap[N]>) => unknown;
+        $beforeUpdate:  (this: HTMLElementTagNameMap[N], ev: CustomEvent<HTMLElementTagNameMap[N]>) => unknown;
+        $update:        (this: HTMLElementTagNameMap[N], ev: CustomEvent<HTMLElementTagNameMap[N]>) => unknown;
+        $beforeUnmount: (this: HTMLElementTagNameMap[N], ev: CustomEvent<HTMLElementTagNameMap[N]>) => unknown;
         $unmount: () => unknown;
     }
 >;

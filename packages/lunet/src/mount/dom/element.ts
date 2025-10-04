@@ -69,7 +69,7 @@ export const renderElement = (jsx: JSXElement): RenderedDOM<JSXElement> => {
         props.$beforeMount?.();
         const el = document.createElement(tag);
         elementEvents.set(el, {});
-        props.$mount?.call(el, new CustomEvent("mount", { detail: el as any }));
+        props.$mount?.call<any, any, any>(el, new CustomEvent("mount", { detail: el }));
 
         for (const [name, value] of Object.entries(props))
             setAttribute(el, name, value);
@@ -78,7 +78,7 @@ export const renderElement = (jsx: JSXElement): RenderedDOM<JSXElement> => {
         el.append(...rendered_children.map(e=>e.render()));
 
         revokerMap.set(el, () => {
-            props.$beforeUnmount?.call(el, new CustomEvent("beforeunmount", { detail: el as any }));
+            props.$beforeUnmount?.call<any, any, any>(el, new CustomEvent("beforeunmount", { detail: el }));
 
             for (const child of rendered_children)
                 child.revoke();
