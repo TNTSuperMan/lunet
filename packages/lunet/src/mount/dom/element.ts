@@ -10,22 +10,6 @@ function handleEvent(this: HTMLElement, ev: Event){
 }
 
 const setAttribute = (el: HTMLElement, name: string, value: unknown) => {
-    if(el instanceof HTMLInputElement) {
-        switch(name){
-            case "checked":
-                if(typeof value === "boolean"){
-                    el.checked = value;
-                    return;
-                }
-                break;
-            case "value":
-                if(typeof value === "string"){
-                    el.value = value;
-                    return;
-                }
-                break;
-        }
-    }
     switch(typeof value){
         case "string":
             el.setAttribute(name, value);
