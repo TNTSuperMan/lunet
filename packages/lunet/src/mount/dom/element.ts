@@ -96,6 +96,8 @@ export const renderElement = (jsx: JSXElement): RenderedDOM<JSXElement> => {
         type: 1,
         flat: () => [currentJSX],
         update(jsx){
+            currentJSX[1].$beforeUpdate?.call<any, any, any>(element!, new CustomEvent("beforeupdate", { detail: element! }));
+            
             const [,, ...old_children] = currentJSX;
             const [, props, ...new_children] = jsx;
 
@@ -132,6 +134,8 @@ export const renderElement = (jsx: JSXElement): RenderedDOM<JSXElement> => {
             }
 
             currentJSX = jsx;
+            
+            props.$update?.call<any, any, any>(element!, new CustomEvent("update", { detail: element! }));
         },
         render(){
             element && revokerMap.get(element)?.();
