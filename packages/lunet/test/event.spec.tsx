@@ -5,7 +5,7 @@ import { withRender } from "./utils/withRender";
 describe("Event", () => {
     const render = withRender();
 
-    test("Single", () => {
+    test("Should call once when once clicked", () => {
         const cb = mock(() => {});
 
         render(<button $click={cb}></button>);
@@ -14,7 +14,7 @@ describe("Event", () => {
         expect(cb).toBeCalledTimes(1);
     });
 
-    test("Changing", () => {
+    test("Should modify callback", () => {
         const CB1_CLICK_COUNT = 3;
         const CB2_CLICK_COUNT = 4;
 
@@ -33,7 +33,7 @@ describe("Event", () => {
         expect(cb2).toBeCalledTimes(CB2_CLICK_COUNT);
     });
 
-    test("Delete", () => {
+    test("Should not call removed callback", () => {
         const cb = mock(() => {});
         render(<button $click={cb}></button>);
         render(<button></button>);
@@ -43,10 +43,10 @@ describe("Event", () => {
         expect(cb).not.toBeCalled();
     });
 
-    test("This", () => {
-        const cb = mock(function(this: HTMLElement, ev: Event) {
-            expect(ev).toBeInstanceOf(Event);
-            expect(this as unknown).toBe(ev.target);
+    test("`event` should instanceof Event, and `this` should be event.target", () => {
+        const cb = mock(function(this: HTMLElement, event: Event) {
+            expect(event).toBeInstanceOf(Event);
+            expect(this as unknown).toBe(event.target);
         });
 
         render(<button $click={cb}></button>);
@@ -54,9 +54,9 @@ describe("Event", () => {
         document.querySelector("button")?.click();
 
         expect(cb).toBeCalledTimes(1);
-    })
+    });
 
-    test("Unhandled event", () => {
+    test("Should not throw error when dispatched unhandled event", () => {
         const dispatchUnhandledEvent = () =>
             document.querySelector("button")?.dispatchEvent(new KeyboardEvent("keydown"));
 
