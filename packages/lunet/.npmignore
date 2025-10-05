@@ -2,4 +2,5 @@ src/
 test/
 .gitignore
 .npmignore
+bunfig.toml
 tsconfig.json
