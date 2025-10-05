@@ -3,7 +3,10 @@ import "../style/main.css";
 
 import index_html from "../sample/index.html" with { type: "text" }; //@ts-ignore
 import index_tsx from "../sample/index.tsx" with { type: "text" }; // @ts-ignore
-import serve_ts from "../sample/serve.ts" with { type: "text" };
+import serve_ts from "../sample/serve.ts" with { type: "text" }; // @ts-ignore
+import Canvas_jsx from "../sample/Canvas.jsx" with { type: "text" }; // @ts-ignore
+import ColorBox_jsx from "../sample/ColorBox.jsx" with { type: "text" }; // @ts-ignore
+import Form_jsx from "../sample/Form.jsx" with { type: "text" };
 
 render(document.body, <>
     <nav>
@@ -29,6 +32,24 @@ render(document.body, <>
             <kbd>
                 $ bun serve
             </kbd>
+        </div>
+        <div class="points">
+            <h2>イベントからDOMを</h2>
+            lunetでは、$mountイベントからDOMを受け取れます。<br/>
+            DOMを受けっ取った直後に何をするかは自由自在。<br/>
+            refに縛られる必要などない。
+            <code title="Form.jsx">{ Form_jsx }</code>
+
+            <h2>明示的な描画</h2>
+            render関数により、明示的に描画が可能です。<br/>
+            これによりリアクティブシステムも自由。<br/>
+            更新するかはあなた次第。
+            <code title="Canvas.jsx">{ Canvas_jsx }</code>
+
+            <h2>明示的な属性変更</h2>
+            セッターオブジェクトを返せば、属性の反映も自由自在。<br/>
+            リアクティブシステムの代入でもいいし、直接操作するのも自由。<br/>
+            <code title="ColorBox.jsx">{ ColorBox_jsx }</code>
         </div>
     </main>
 </>);
