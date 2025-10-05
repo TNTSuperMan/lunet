@@ -34,4 +34,6 @@ test("Check batch", () => {
     document.querySelector("button")?.click();
 
     expect(batch_info).toEqual([2, 2]);
+
+    setBatch(cb => cb());
 });
