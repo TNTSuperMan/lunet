@@ -1,0 +1,20 @@
+{
+  "name": "lunet-website",
+  "version": "0.0.0",
+  "author": "TNTSuperMan",
+  "license": "MIT",
+  "description": "lunetのウェブサイト",
+  "private": "true",
+  "module": "dist/index.js",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TNTSuperMan/lunet.git"
+  },
+  "dependencies": {
+    "lunet": "^0.0.4"
+  },
+  "devDependencies": {
+    "lunet-transpiler": "^0.0.1"
+  }
+}

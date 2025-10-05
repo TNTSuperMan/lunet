@@ -1,0 +1,53 @@
+body {
+    background: #000;
+    color: #fff;
+    margin: 0;
+
+    nav {
+        background: #151515;
+        padding: 13px 5px;
+        margin: 0;
+        a {
+            background: #292929;
+            color: #eee;
+            padding: 6px;
+            margin: 4px;
+            border-radius: 10px;
+            
+            text-decoration: none;
+        }
+    }
+    main {
+        text-align: center;
+
+        .start {
+            border: 1px #666 solid;
+            background: #070707;
+            padding: 10px;
+            margin: 15px;
+            border-radius: 10px;
+        }
+    }
+}
+
+code, kbd {
+    display: block;
+    background: #171717;
+    padding: 5px;
+    margin: 10px;
+    border-radius: 4px;
+
+    text-align: left;
+    white-space: pre-wrap;
+
+    &[title]::before {
+        display: block;
+        background: #333;
+        padding: 3px;
+        margin: 3px;
+        border-radius: 5px;
+        width: min-content;
+
+        content: attr(title);
+    }
+}
