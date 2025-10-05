@@ -43,6 +43,19 @@ describe("Event", () => {
         expect(cb).not.toBeCalled();
     });
 
+    test("This", () => {
+        const cb = mock(function(this: HTMLElement, ev: Event) {
+            expect(ev).toBeInstanceOf(Event);
+            expect(this as unknown).toBe(ev.target);
+        });
+
+        render(<button $click={cb}></button>);
+
+        document.querySelector("button")?.click();
+
+        expect(cb).toBeCalledTimes(1);
+    })
+
     test("Unhandled event", () => {
         const dispatchUnhandledEvent = () =>
             document.querySelector("button")?.dispatchEvent(new KeyboardEvent("keydown"));
