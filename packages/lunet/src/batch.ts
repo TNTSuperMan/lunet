@@ -1,3 +1,5 @@
-export let batch: ((cb: () => void) => void) = cb => cb();
+type BatchFn = (cb: () => void) => void;
 
-export const setBatch = (fn: typeof batch) => batch = fn;
+export let batch: BatchFn = cb => cb();
+
+export const setBatch = (fn: BatchFn) => batch = fn;

@@ -30,8 +30,8 @@
         "@babel/types": "^7.28.2",
       },
     },
-    "packages/lunet-webpage": {
-      "name": "lunet-webpage",
+    "packages/lunet-website": {
+      "name": "lunet-website",
       "version": "0.0.0",
       "dependencies": {
         "lunet": "^0.0.4",
@@ -234,7 +234,7 @@
 
     "lunet-transpiler": ["lunet-transpiler@workspace:packages/lunet-transpiler"],
 
-    "lunet-webpage": ["lunet-webpage@workspace:packages/lunet-webpage"],
+    "lunet-website": ["lunet-website@workspace:packages/lunet-website"],
 
     "ms": ["ms@2.1.3", "", {}, "sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA=="],
 
