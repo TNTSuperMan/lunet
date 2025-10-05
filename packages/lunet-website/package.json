@@ -1,9 +1,9 @@
 {
-  "name": "lunet-webpage",
+  "name": "lunet-website",
   "version": "0.0.0",
   "author": "TNTSuperMan",
   "license": "MIT",
-  "description": "lunetのウェブページ",
+  "description": "lunetのウェブサイト",
   "private": "true",
   "module": "dist/index.js",
   "type": "module",
