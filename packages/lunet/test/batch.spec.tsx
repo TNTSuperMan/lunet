@@ -11,7 +11,7 @@ test("Check batch", () => {
         batching_flag = false;
     });
 
-    const Child = createComponent<{ a: string, b: string }>((render, init) => {
+    const Child = createComponent<{ a: string, b: string }>(render => {
         render("");
         return {
             set a(_: string) { expect(batching_flag).toBeTrue(); batch_info[0]++; },
@@ -19,13 +19,13 @@ test("Check batch", () => {
         }
     });
 
-    const Parent = createComponent((render, init) => {
+    const Parent = createComponent(render => {
         const render_ = () => render(<>
             <button $click={render_}></button>
             <Child a="a" b="b" />
         </>);
         render_();
-        return init;
+        return {};
     });
 
     render(document.body, <Parent/>);
