@@ -2,7 +2,7 @@ import { expect, test } from "bun:test";
 import { createComponent, setBatch } from "../src";
 import { withRender } from "./utils/withRender";
 
-test("Batch", () => {
+test("Test batch behavior", () => {
     const RENDER_COUNT = 2;
 
     let batching_flag = false;

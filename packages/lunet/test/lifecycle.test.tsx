@@ -2,7 +2,7 @@ import { test, expect, mock } from "bun:test";
 import { withRender } from "./utils/withRender";
 import { h, fragment } from "../src";
 
-test("Lifecycle", () => {
+test("Test lifecycle events", () => {
     const render = withRender();
 
     const history: number[] = [];
