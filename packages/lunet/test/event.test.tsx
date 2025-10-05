@@ -40,7 +40,7 @@ describe("Event", () => {
 
         document.querySelector("button")?.click();
 
-        expect(cb).not.toBeCalled();
+        expect(cb).not.toHaveBeenCalled();
     });
 
     test("`event` should instanceof Event, and `this` should be event.target", () => {
