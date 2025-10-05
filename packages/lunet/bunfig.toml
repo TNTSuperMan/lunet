@@ -3,4 +3,4 @@ jsxFactory = "h"
 jsxFragment = "fragment"
 
 [test]
-preload = "./test/_preload.ts"
+preload = "./test/utils/preload.ts"
