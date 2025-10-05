@@ -11,7 +11,7 @@ describe("Event", () => {
         render(<button $click={cb}></button>);
         document.querySelector("button")?.click();
 
-        expect(cb).toBeCalledTimes(1);
+        expect(cb).toHaveBeenCalledTimes(1);
     });
 
     test("Should modify callback", () => {
@@ -29,8 +29,8 @@ describe("Event", () => {
         for(let i = 0; i < CB2_CLICK_COUNT; i++)
             document.querySelector("button")?.click();
 
-        expect(cb1).toBeCalledTimes(CB1_CLICK_COUNT);
-        expect(cb2).toBeCalledTimes(CB2_CLICK_COUNT);
+        expect(cb1).toHaveBeenCalledTimes(CB1_CLICK_COUNT);
+        expect(cb2).toHaveBeenCalledTimes(CB2_CLICK_COUNT);
     });
 
     test("Should not call removed callback", () => {
@@ -53,7 +53,7 @@ describe("Event", () => {
 
         document.querySelector("button")?.click();
 
-        expect(cb).toBeCalledTimes(1);
+        expect(cb).toHaveBeenCalledTimes(1);
     });
 
     test("Should not throw error when dispatched unhandled event", () => {

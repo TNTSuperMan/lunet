@@ -11,30 +11,34 @@ test("Test lifecycle events", () => {
     const beforeMount = mock(() => {
         history.push(0);
     });
-    const mount = mock((ev: CustomEvent<HTMLElement>) => {
-        expect(ev).toBeObject();
+    const mount = mock(function (this: HTMLElement, ev: CustomEvent<HTMLElement>) {
+        expect(ev).toBeInstanceOf(CustomEvent);
         expect(ev.type).toBe("mount");
+        expect(this).toBe(ev.detail);
         // メモ: 要素の$mount時点では親要素に追加されていない、多分今後のTODO
         history.push(1);
         elements.push(ev.detail);
     });
-    const beforeUpdate = mock((ev: CustomEvent<HTMLElement>) => {
-        expect(ev).toBeObject();
+    const beforeUpdate = mock(function (this: HTMLElement, ev: CustomEvent<HTMLElement>) {
+        expect(ev).toBeInstanceOf(CustomEvent);
         expect(ev.type).toBe("beforeupdate");
+        expect(this).toBe(ev.detail);
         expect(document.body.childNodes).toContain(ev.detail);
         history.push(2);
         elements.push(ev.detail);
     });
-    const update = mock((ev: CustomEvent<HTMLElement>) => {
-        expect(ev).toBeObject();
+    const update = mock(function (this: HTMLElement, ev: CustomEvent<HTMLElement>) {
+        expect(ev).toBeInstanceOf(CustomEvent);
         expect(ev.type).toBe("update");
+        expect(this).toBe(ev.detail);
         expect(document.body.childNodes).toContain(ev.detail);
         history.push(3);
         elements.push(ev.detail);
     });
-    const beforeUnmount = mock((ev: CustomEvent<HTMLElement>) => {
-        expect(ev).toBeObject();
+    const beforeUnmount = mock(function (this: HTMLElement, ev: CustomEvent<HTMLElement>) {
+        expect(ev).toBeInstanceOf(CustomEvent);
         expect(ev.type).toBe("beforeunmount");
+        expect(this).toBe(ev.detail);
         expect(document.body.childNodes).toContain(ev.detail);
         history.push(4);
         elements.push(ev.detail);
@@ -46,18 +50,18 @@ test("Test lifecycle events", () => {
 
     
     const checkMount = () => {
-        expect(beforeMount).toBeCalledTimes(1);
-        expect(beforeMount).toBeCalledWith();
-        expect(mount).toBeCalledTimes(1);
+        expect(beforeMount).toHaveBeenCalledTimes(1);
+        expect(beforeMount).toHaveBeenCalledWith();
+        expect(mount).toHaveBeenCalledTimes(1);
     }
     const checkUpdate = () => {
-        expect(beforeUpdate).toBeCalledTimes(1);
-        expect(update).toBeCalledTimes(1);
+        expect(beforeUpdate).toHaveBeenCalledTimes(1);
+        expect(update).toHaveBeenCalledTimes(1);
     }
     const checkUnmount = () => {
-        expect(beforeUnmount).toBeCalledTimes(1);
-        expect(unmount).toBeCalledTimes(1);
-        expect(unmount).toBeCalledWith();
+        expect(beforeUnmount).toHaveBeenCalledTimes(1);
+        expect(unmount).toHaveBeenCalledTimes(1);
+        expect(unmount).toHaveBeenCalledWith();
     }
 
     render(<div
@@ -97,6 +101,6 @@ test("Test lifecycle events", () => {
     checkUpdate();
     checkUnmount();
 
-    expect(elements[0]).toBeObject();
+    expect(elements[0]).toBeInstanceOf(HTMLElement);
     expect(elements.every(e=>elements[0] === e)).toBeTrue();
 });
