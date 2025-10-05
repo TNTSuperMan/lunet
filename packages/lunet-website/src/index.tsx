@@ -15,7 +15,7 @@ import Form_jsx from "../sample/Form.jsx" with { type: "text" };
 
 render(document.body, <>
     <nav>
-        <a target="_blank" href="/">ホーム</a>
+        <a href="/">ホーム</a>
         <a target="_blank" href="https://example.com/wiki">Wiki</a>
         <a target="_blank" href="https://github.com/TNTSuperMan/lunet">GitHub</a>
     </nav>
