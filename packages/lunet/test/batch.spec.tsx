@@ -1,7 +1,10 @@
 import { expect, test } from "bun:test";
-import { createComponent, setBatch, h, fragment, render } from "../src";
+import { createComponent, setBatch } from "../src";
+import { withRender } from "./utils/withRender";
 
-test("Check batch", () => {
+test("Batch", () => {
+    const RENDER_COUNT = 2;
+
     let batching_flag = false;
     const batch_info: number[] = [];
     setBatch(cb => {
@@ -11,29 +14,17 @@ test("Check batch", () => {
         batching_flag = false;
     });
 
-    const Child = createComponent<{ a: string, b: string }>(render => {
-        render("");
-        return {
-            set a(_: string) { expect(batching_flag).toBeTrue(); batch_info[0]++; },
-            set b(_: string) { expect(batching_flag).toBeTrue(); batch_info[0]++; }
-        }
-    });
+    const Child = createComponent<{ a: string, b: string }>(() => ({
+        set a(_: string) { expect(batching_flag).toBeTrue(); batch_info[0]++; },
+        set b(_: string) { expect(batching_flag).toBeTrue(); batch_info[0]++; }
+    }));
 
-    const Parent = createComponent(render => {
-        const render_ = () => render(<>
-            <button $click={render_}></button>
-            <Child a="a" b="b" />
-        </>);
-        render_();
-        return {};
-    });
+    const render = withRender(Child({ a: "a", b: "b" }));
 
-    render(document.body, <Parent/>);
+    for(let i = 0; i < RENDER_COUNT; i++)
+        render(Child({ a: "a", b: "b" }));
 
-    document.querySelector("button")?.click();
-    document.querySelector("button")?.click();
-
-    expect(batch_info).toEqual([2, 2]);
+    expect(batch_info).toEqual(Array(RENDER_COUNT).fill(2));
 
     setBatch(cb => cb());
 });
