@@ -1,5 +1,5 @@
 import { expect } from "bun:test";
-import { createComponent, type Component, type JSXNode, render as renderDOM } from "../../src";
+import { createComponent, type JSXNode, render as renderDOM } from "../../src";
 
 export const withRender = (init?: JSXNode): (jsx: JSXNode) => void => {
     let render = null as ((jsx: JSXNode) => void) | null;
