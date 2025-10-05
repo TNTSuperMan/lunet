@@ -49,7 +49,7 @@ render(document.body, <>
             render関数により、明示的に描画が可能です。<br/>
             これによりリアクティブシステムも自由。<br/>
             更新するかはあなた次第。
-            <code title="Canvas.jsx">{ files["Cnavas.ksx"] }</code>
+            <code title="Canvas.jsx">{ files["Canvas.jsx"] }</code>
 
             <h2>明示的な属性変更</h2>
             セッターオブジェクトを返せば、属性の反映も自由自在。<br/>
