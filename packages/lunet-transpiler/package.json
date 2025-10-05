@@ -33,5 +33,8 @@
     "target": "node",
     "minify": true,
     "outDir": "dist"
+  },
+  "scripts": {
+    "build": "bunup"
   }
 }
