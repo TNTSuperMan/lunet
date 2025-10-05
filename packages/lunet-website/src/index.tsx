@@ -18,7 +18,7 @@ render(document.body, <>
             <h2>始める</h2>
             <kbd>
                 $ bun init <br/>
-                $ bun add lunet <br/>
+                $ bun add lunet alien-signals <br/>
                 $ bun add -D lunet-transpiler <br/>
             </kbd>
 
