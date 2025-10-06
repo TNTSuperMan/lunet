@@ -3,28 +3,32 @@ import type { JSXElement, JSXNode } from "../../jsx";
 import { revokerMap } from "../revokerMap";
 import { diff } from "../diff";
 
-const elementEvents: WeakMap<HTMLElement, Record<string, Function>> = new WeakMap;
+const elementEvents: WeakMap<HTMLElement, Record<string, Function | undefined | null>> = new WeakMap;
 
 function handleEvent(this: HTMLElement, ev: Event){
     return elementEvents.get(this)?.[ev.type]?.call(this, ev);
 }
 
 const setAttribute = (el: HTMLElement, name: string, value: unknown) => {
-    switch(typeof value){
+    if (name.startsWith("$")) {
+        const ev_name = name.substring(1);
+        if (!["beforeMount", "mount", "beforeUpdate", "update", "beforeUnmount", "unmount"].includes(ev_name)) {
+            const events = elementEvents.get(el)!;
+            if(!(ev_name in events))
+                el.addEventListener(ev_name, handleEvent);
+            if (typeof value === "function" || value == null)
+                events[ev_name] = value;
+            else {
+                console.error("Invalid event handler: ", value);
+                events[ev_name] = undefined;
+            }
+        }
+    } else switch(typeof value){
         case "string":
             el.setAttribute(name, value);
             break;
         case "function":
-            if(name.startsWith("$")){
-                if(!["$beforeMount", "$mount", "$beforeUnmount", "$unmount"].includes(name)){
-                    const ev_name = name.substring(1);
-                    const events = elementEvents.get(el)!;
-                    if(!(ev_name in events))
-                        el.addEventListener(ev_name, handleEvent);
-                    events[ev_name] = value;
-                }
-            }else
-                console.error("function values cannot mount on attributes.");
+            console.error("function values cannot mount on attributes.");
             break;
         case "object":
             if(value === null)
@@ -82,10 +86,17 @@ export const renderElement = (jsx: JSXElement): RenderedDOM<JSXElement> => {
         update(jsx){
             currentJSX[1].$beforeUpdate?.call<any, any, any>(element!, new CustomEvent("beforeupdate", { detail: element! }));
             
-            const [,, ...old_children] = currentJSX;
+            const [, old_props, ...old_children] = currentJSX;
             const [, props, ...new_children] = jsx;
 
-            for (const [name, value] of Object.entries(props))
+            const removed_prop_keys = Object.keys(old_props).filter(key => !(key in props));
+
+            for (const [name, value] of Object.entries({
+                ...props,
+                ...Object.fromEntries(
+                    removed_prop_keys.map(key => [key, undefined])
+                )
+            }))
                 if((currentJSX[1] as any)[name] !== value)
                     setAttribute(element!, name, value);
 
