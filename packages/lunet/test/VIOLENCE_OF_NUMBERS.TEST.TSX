@@ -77,7 +77,7 @@ test.skipIf(!doTest)("Test JSX Diff Updates Exhaustive by VIOLENCE OF NUMBERS", 
             write("coverage/failed.json", JSON.stringify([before, jsx]));
             throw new Error("Rendering failed", { cause });
         }
-        const dom_jsx = analyzeTree(Array.from(document.body.childNodes).filter(e => !(e instanceof Comment))[0]);
+        const dom_jsx = analyzeTree([...document.body.childNodes].filter(e => !(e instanceof Comment))[0]);
 
         expect(dom_jsx).toEqual(jsx);
 
