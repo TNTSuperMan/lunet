@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test";
 import { type JSXNode } from "../src";
 import { withRender } from "./utils/withRender";
-import { env, write } from "bun";
+import { env } from "bun";
 
 const TEST_CASE_SEED = parseInt(env.VIOLENCE_OF_NUMBERS_SEED ?? "") || 14;
 const TEST_CASE_COUNT = 128;
@@ -52,6 +52,19 @@ const GenerateRandomJSX = (layer?: number): JSXNode => {
     }
 }
 
+const flatFragment = (jsx: JSXNode): JSXNode[] => {
+    if (Array.isArray(jsx)) {
+        if (jsx[0] === null) {
+            const [,, ...children] = jsx;
+            return children.flatMap(flatFragment);
+        } else if(typeof jsx[0] === "string") {
+            const [tag, attrs, ...children] = jsx;
+            return [[tag, attrs, ...children.flatMap(flatFragment)]];
+        }
+    }
+    return [jsx];
+}
+
 const analyzeTree = (dom: Node): JSXNode | null => {
     if (dom instanceof Text) {
         return dom.nodeValue;
@@ -84,7 +97,7 @@ test.skipIf(!doTest)("Test JSX Diff Updates Exhaustive by VIOLENCE OF NUMBERS", 
         }
         const dom_jsx = analyzeTree([...document.body.childNodes].filter(e => !(e instanceof Comment))[0]);
 
-        expect(dom_jsx).toEqual(jsx);
+        expect(dom_jsx as unknown).toEqual(flatFragment(jsx)[0]);
 
         before = jsx;
     }
