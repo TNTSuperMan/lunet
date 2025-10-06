@@ -1,4 +1,4 @@
-import { test } from "bun:test";
+import { expect, test } from "bun:test";
 import { type JSXNode } from "../src";
 import { withRender } from "./utils/withRender";
 import { env, write } from "bun";
@@ -47,6 +47,23 @@ const GenerateRandomJSX = (layer?: number): JSXNode => {
     }
 }
 
+const analyzeTree = (dom: Node): JSXNode | null => {
+    if (dom instanceof Text) {
+        return dom.nodeValue;
+    }
+    if (dom instanceof Comment) {
+        return null;
+    }
+    if (dom instanceof HTMLElement) {
+        return [
+            dom.tagName.toLowerCase() as keyof HTMLElementTagNameMap,
+            Object.fromEntries([...dom.attributes].map(({ name, value }) => [name, value])),
+            ...[...dom.childNodes].map(analyzeTree).filter(e => e !== null)
+        ];
+    }
+    throw new Error(`Unhandled type DOM`, { cause: dom });
+}
+
 test.skipIf(!doTest)("Test JSX Diff Updates Exhaustive by VIOLENCE OF NUMBERS", () => {
     const render = withRender();
 
@@ -60,6 +77,10 @@ test.skipIf(!doTest)("Test JSX Diff Updates Exhaustive by VIOLENCE OF NUMBERS", 
             write("coverage/failed.json", JSON.stringify([before, jsx]));
             throw new Error("Rendering failed", { cause });
         }
+        const dom_jsx = analyzeTree(Array.from(document.body.childNodes).filter(e => !(e instanceof Comment))[0]);
+
+        expect(dom_jsx).toEqual(jsx);
+
         before = jsx;
     }
 });
