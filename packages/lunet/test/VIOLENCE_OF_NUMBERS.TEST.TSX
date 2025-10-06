@@ -1,13 +1,22 @@
-import { setRandomSeed } from "bun:jsc";
-import { describe, test } from "bun:test";
+import { test } from "bun:test";
 import { type JSXNode } from "../src";
 import { withRender } from "./utils/withRender";
-import { env } from "bun";
+import { env, write } from "bun";
 
-const TEST_CASE_OFFSET = parseInt(env.VIOLENCE_OF_NUMBERS_OFFSET ?? "") || 0;
+const TEST_CASE_SEED = parseInt(env.VIOLENCE_OF_NUMBERS_SEED ?? "") || 14;
 const TEST_CASE_COUNT = 128;
 
-const rand = (num: number): number => Math.floor(Math.random() * num);
+const float_rand = (() => {
+    let x = TEST_CASE_SEED;
+    return () => {
+        x ^= x << 13;
+        x ^= x >> 17;
+        x ^= x << 5;
+        return (x >>> 0) / (2**32)
+    }
+})();
+
+const rand = (num: number): number => Math.floor(float_rand() * num);
 const rand_str = (strs: string, len: number): string => Array(len).fill(0).map(() => strs[rand(strs.length)]).join("");
 
 const doTest = env.VIOLENCE_OF_NUMBERS === "GO";
@@ -38,12 +47,19 @@ const GenerateRandomJSX = (layer?: number): JSXNode => {
     }
 }
 
-describe.skipIf(!doTest)("Test JSX Diff Updates Exhaustive by VIOLENCE OF NUMBERS", () => {
+test.skipIf(!doTest)("Test JSX Diff Updates Exhaustive by VIOLENCE OF NUMBERS", () => {
     const render = withRender();
 
-    test.each(!doTest ? [] : Array(TEST_CASE_COUNT).fill(0).map((_,i)=>i + TEST_CASE_OFFSET))("Seed: %i", seed => {
-        setRandomSeed(seed);
+    let before: JSXNode | null = null;
+
+    for (let i = 0; i < TEST_CASE_COUNT; i++ ) {
         const jsx = GenerateRandomJSX();
-        render(jsx);
-    });
+        try {
+            render(jsx);
+        } catch (cause) {
+            write("coverage/failed.json", JSON.stringify([before, jsx]));
+            throw new Error("Rendering failed", { cause });
+        }
+        before = jsx;
+    }
 });
