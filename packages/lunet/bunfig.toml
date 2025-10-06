@@ -1,0 +1,6 @@
+jsx = "react"
+jsxFactory = "h"
+jsxFragment = "fragment"
+
+[test]
+preload = "./test/utils/preload.ts"
