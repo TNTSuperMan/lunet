@@ -6,7 +6,7 @@ import { diff } from "../diff";
 const elementEvents: WeakMap<HTMLElement, Record<string, Function>> = new WeakMap;
 
 function handleEvent(this: HTMLElement, ev: Event){
-    return elementEvents.get(this)?.[ev.type]?.();
+    return elementEvents.get(this)?.[ev.type]?.call(this, ev);
 }
 
 const setAttribute = (el: HTMLElement, name: string, value: unknown) => {
