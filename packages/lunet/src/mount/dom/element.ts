@@ -101,28 +101,31 @@ export const renderElement = (jsx: JSXElement): RenderedDOM<JSXElement> => {
                     setAttribute(element!, name, value);
 
             const patches = diff(old_children, new_children);
-            let removes = 0;
+            let gap = 0;
             for (const [type, idx_, jsx] of patches) {
-                const idx = idx_ - removes;
+                const idx = idx_ + gap;
                 switch(type){
                     case 0:
                         rendered_children[idx].update(jsx as any);
                         break;
                     case 1:
+                        gap++;
                         const rendered = renderNode(jsx);
                         rendered_children.splice(idx, 0, rendered);
 
                         const dom_index = rendered_children.reduce((p,c)=>p+c.flat().length, 0);
                         const el = rendered.render();
 
-                        if(dom_index >= element!.childNodes.length)
+                        const elements_without_comments = Array.from(element!.childNodes).filter(e => e.nodeType !== 8);
+
+                        if(dom_index >= elements_without_comments.length)
                             element!.append(el);
                         else
-                            element!.childNodes[dom_index]!.before(el);
+                            elements_without_comments[dom_index]!.before(el);
 
                         break;
                     case 2:
-                        removes++;
+                        gap--;
                         rendered_children.splice(idx, 1)[0].revoke();
                         break;
                 }

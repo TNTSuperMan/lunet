@@ -16,28 +16,30 @@ export const renderFragment = (jsx: JSXFragment): RenderedDOM<JSXFragment> => {
             const [,, ...new_children] = jsx;
 
             const patches = diff(old_children, new_children);
-            let removes = 0;
+            let gap = 0;
 
             for (const [type, idx_, jsx] of patches) {
-                const idx = idx_ - removes;
+                const idx = idx_ + gap;
                 switch(type){
                     case 0:
                         rendered_children[idx].update(jsx as any);
                         break;
                     case 1:
+                        gap++;
                         const rendered = renderNode(jsx);
                         rendered_children.splice(idx, 0, rendered);
                         const dom = rendered.render();
                         let refNode: ChildNode | null = null; // TODO: ここら辺を最適化する
                         if (mark && mark.parentNode) {
-                            let node: ChildNode | null = mark.nextSibling;
+                            let node: ChildNode | null = mark;
                             let count = 0;
                             while (node) {
+                                node = node.nextSibling;
+                                if (node?.nodeType === 8) continue;
                                 if (count === idx) {
                                     refNode = node;
                                     break;
                                 }
-                                node = node.nextSibling;
                                 count++;
                             }
                             if (refNode) {
@@ -48,7 +50,7 @@ export const renderFragment = (jsx: JSXFragment): RenderedDOM<JSXFragment> => {
                         }
                         break;
                     case 2:
-                        removes++;
+                        gap--;
                         const [removed] = rendered_children.splice(idx, 1);
                         removed.revoke();
                         break;
