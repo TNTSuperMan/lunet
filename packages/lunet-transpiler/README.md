@@ -3,9 +3,9 @@
 
 ## インストール
 ```bash
-$ npm install lunet-transpiler
+$ npm install --save-dev lunet-transpiler
 # or
-$ bun i lunet-transpiler
+$ bun add -D lunet-transpiler
 ```
 
 ## 対応状況

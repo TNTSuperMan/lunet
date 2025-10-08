@@ -5,10 +5,14 @@
 ```bash
 $ npm install lunet
 # or
-$ bun i lunet
+$ bun add lunet
 
 # こちらもお勧め
-$ bun i lunet-transpiler
+$ npm install alien-signals
+$ npm install --save-dev lunet-transpiler
+# or
+$ bun add alien-signals
+$ bun add -D lunet-transpiler
 ```
 
 ## 使い方のサンプル
