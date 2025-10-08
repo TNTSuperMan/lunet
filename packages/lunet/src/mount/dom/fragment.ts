@@ -24,24 +24,10 @@ export const renderFragment = (jsx: JSXFragment): RenderedDOM<JSXFragment> => {
                         const rendered = renderNode(jsx);
                         rendered_children.splice(idx, 0, rendered);
                         const dom = rendered.render();
-                        let refNode: ChildNode | null = null; // TODO: ここら辺を最適化する
-                        if (mark && mark.parentNode) {
-                            let node: ChildNode | null = mark;
-                            let count = 0;
-                            while (node) {
-                                node = node.nextSibling;
-                                if (node?.nodeType === 8) continue;
-                                if (count === idx) {
-                                    refNode = node;
-                                    break;
-                                }
-                                count++;
-                            }
-                            if (refNode) {
-                                mark.parentNode.insertBefore(dom, refNode);
-                            } else {
-                                mark.parentNode.appendChild(dom);
-                            }
+                        if (idx === 0) {
+                            mark!.after(dom);
+                        } else {
+                            rendered_children[idx - 1].after(dom);
                         }
                         break;
                     case 2:
@@ -67,6 +53,9 @@ export const renderFragment = (jsx: JSXFragment): RenderedDOM<JSXFragment> => {
         revoke(){
             for (const child of rendered_children)
                 child.revoke();
+        },
+        after(node) {
+            (rendered_children.at(-1) ?? mark)?.after(node);
         },
     }
 }

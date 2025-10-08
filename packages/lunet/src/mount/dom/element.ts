@@ -111,17 +111,16 @@ export const renderElement = (jsx: JSXElement): RenderedDOM<JSXElement> => {
                     case 1:
                         const rendered = renderNode(jsx);
                         rendered_children.splice(idx, 0, rendered);
-
-                        const dom_index = rendered_children.reduce((p,c)=>p+c.flat().length, 0);
-                        const el = rendered.render();
-
-                        const elements_without_comments = Array.from(element!.childNodes).filter(e => e.nodeType !== 8);
-
-                        if(dom_index >= elements_without_comments.length)
-                            element!.append(el);
-                        else
-                            elements_without_comments[dom_index]!.before(el);
-
+                        const dom = rendered.render();
+                        if (idx === 0) {
+                            if (element!.firstChild) {
+                                element!.firstChild.before(dom);
+                            } else {
+                                element!.append(dom);
+                            }
+                        } else {
+                            rendered_children[idx - 1].after(dom);
+                        }
                         break;
                     case 2:
                         rendered_children.splice(idx, 1)[0].revoke();
@@ -138,5 +137,6 @@ export const renderElement = (jsx: JSXElement): RenderedDOM<JSXElement> => {
             return render();
         },
         revoke(){ element && revokerMap.get(element)?.() },
+        after(node) { element!.after(node) },
     }
 }

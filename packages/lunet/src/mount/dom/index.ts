@@ -10,6 +10,7 @@ export type RenderedDOM<T extends JSXNode> = {
     update(jsx: T): void,              // 2 差分更新関数
     render(): Node,                    // 3 初回・トラブル時にフル描画をする関数
     revoke(): void,                    // 4 破棄関数
+    after(node: Node): void,           // 5 挿入関数
 }
 
 export type UnknownRenderedDOM = RenderedDOM<string> | RenderedDOM<JSXElement> | RenderedDOM<JSXFragment> | RenderedDOM<JSXComponent>;

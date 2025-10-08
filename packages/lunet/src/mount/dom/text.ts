@@ -10,5 +10,6 @@ export const renderText = (jsx: string): RenderedDOM<string> => {
         update(jsx){ currentText !== jsx && (node.textContent = currentText = jsx) },
         render: () => node,
         revoke(){ node.remove() },
+        after(n) { node.parentNode!.insertBefore(n, node.nextSibling) },
     }
 }
