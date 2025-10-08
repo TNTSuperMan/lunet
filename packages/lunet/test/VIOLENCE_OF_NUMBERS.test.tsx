@@ -131,9 +131,9 @@ test.skipIf(!doTest)("Test JSX Diff Updates Exhaustive by VIOLENCE OF NUMBERS", 
                 throw new Error("Rendering failed", { cause: err });
             }
         }
-        const dom_jsx = analyzeTree(Array.from(document.body.childNodes).filter(e => !(e instanceof Comment))[0]);
+        const dom_jsx = analyzeTree(document.body);
 
-        expect(prettyJSX(dom_jsx!)).toEqual(prettyJSX(flatFragment(jsx)[0]));
+        expect(prettyJSX(dom_jsx!)).toEqual(prettyJSX(["body",{},...flatFragment(jsx)]));
 
         before = jsx;
     }
