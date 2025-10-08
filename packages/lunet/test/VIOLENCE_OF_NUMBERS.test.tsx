@@ -28,7 +28,7 @@ const rand_str = (strs: string, len: number): string => Array(len).fill(0).map((
 const doTest = env.VIOLENCE_OF_NUMBERS === "GO";
 
 const GenerateRandomJSX = (layer?: number): JSXNode => {
-    if((layer??0) > 1)
+    if((layer??0) > 3)
         return rand_pick(SAMPLE_TEXTS);
     switch(rand(3)) {
         case 0:
@@ -40,13 +40,13 @@ const GenerateRandomJSX = (layer?: number): JSXNode => {
                         rand_str("abcdefghijklmnopqrstuvwxyz", rand(15)+1),
                     ])
                 ),
-                ...Array(rand(16 - (layer??0)*7)).fill(0).map(()=>GenerateRandomJSX((layer??0)+1))
+                ...Array(rand(32 - (layer??0)*10)).fill(0).map(()=>GenerateRandomJSX((layer??0)+1))
             ];
         case 1:
             return [
                 null,
                 rand(2) === 0 ? {} : { key: `key${rand(16)}` },
-                ...Array(rand(16 - (layer??0)*7)).fill(0).map(()=>GenerateRandomJSX((layer??0)+1))
+                ...Array(rand(32 - (layer??0)*10)).fill(0).map(()=>GenerateRandomJSX((layer??0)+1))
             ];
         default:
             return rand_pick(SAMPLE_TEXTS);
