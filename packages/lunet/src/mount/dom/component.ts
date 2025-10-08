@@ -10,7 +10,7 @@ export const renderComponent = (jsx: JSXComponent): RenderedDOM<JSXComponent> =>
     let props: { [key: string]: unknown } | null;
 
     return {
-        type: 3,
+        // type: 3,
         // flat: () => rendered_dom!.flat() ?? [],
         update(jsx){
             const [, afterProps/*, ...children*/] = currentJSX = jsx;

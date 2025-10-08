@@ -49,7 +49,7 @@ export const renderElement = (jsx: JSXElement): RenderedDOM<JSXElement> => {
     let element: HTMLElement | void;
 
     return {
-        type: 1,
+        // type: 1,
         // flat: () => [currentJSX],
         update(jsx){
             currentJSX[1].$beforeUpdate?.call<any, any, any>(element!, new CustomEvent("beforeupdate", { detail: element! }));

@@ -5,7 +5,7 @@ export const renderText = (jsx: string): RenderedDOM<string> => {
     let node: Text | null;
 
     return {
-        type: 0,
+        // type: 0,
         // flat: () => [currentText],
         update(jsx){ currentText !== jsx && (node!.textContent = currentText = jsx) },
         render: () => node = new Text(currentText),
