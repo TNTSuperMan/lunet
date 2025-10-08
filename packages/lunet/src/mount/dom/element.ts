@@ -106,13 +106,14 @@ export const renderElement = (jsx: JSXElement): RenderedDOM<JSXElement> => {
             const patches = diff(old_children, new_children);
             let gap = 0;
             for (const [type, idx_, jsx] of patches) {
-                const idx = idx_ + gap;
+                let idx = idx_ + gap;
                 switch(type){
                     case 0:
                         rendered_children[idx].update(jsx as any);
                         break;
                     case 1:
                         gap++;
+                        idx++;
                         const rendered = renderNode(jsx);
                         rendered_children.splice(idx, 0, rendered);
 
