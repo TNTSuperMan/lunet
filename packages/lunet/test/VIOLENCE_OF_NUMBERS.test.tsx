@@ -2,7 +2,6 @@ import { expect, test } from "bun:test";
 import { type JSXNode } from "../src";
 import { withRender } from "./utils/withRender";
 import { env } from "bun";
-import { LunetJSXAssertionError } from "../src/assert/error";
 
 const TEST_CASE_SEED = parseInt(env.VIOLENCE_OF_NUMBERS_SEED ?? "") || 14;
 const TEST_CASE_COUNT = 128;
@@ -122,14 +121,7 @@ test.skipIf(!doTest)("Test JSX Diff Updates Exhaustive by VIOLENCE OF NUMBERS", 
         try {
             render(jsx);
         } catch (err) {
-            if (err instanceof LunetJSXAssertionError) {
-                console.log(find(before!, err.cause as any));
-                const [,,...children] = jsx;
-                console.log(children.map(child => Bun.inspect(child, { depth: 1, compact: true })).join("\n"));
-                throw new Error(err.message);
-            } else {
-                throw new Error("Rendering failed", { cause: err });
-            }
+            throw new Error("Rendering failed", { cause: err });
         }
         const dom_jsx = analyzeTree(document.body);
 
