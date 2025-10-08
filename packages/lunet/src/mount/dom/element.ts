@@ -1,6 +1,5 @@
 import { renderNode, type RenderedDOM, type UnknownRenderedDOM } from ".";
 import type { JSXElement, JSXNode } from "../../jsx";
-import { revokerMap } from "../revokerMap";
 import { diff } from "../diff";
 
 const elementEvents: WeakMap<HTMLElement, Record<string, Function | undefined | null>> = new WeakMap;
@@ -65,18 +64,6 @@ export const renderElement = (jsx: JSXElement): RenderedDOM<JSXElement> => {
         rendered_children = children.map(renderNode);
         el.append(...rendered_children.map(e=>e.render()));
 
-        revokerMap.set(el, () => {
-            props.$beforeUnmount?.call<any, any, any>(el, new CustomEvent("beforeunmount", { detail: el }));
-
-            for (const child of rendered_children)
-                child.revoke();
-            revokerMap.delete(el);
-            elementEvents.delete(el);
-            el.remove();
-            
-            props.$unmount?.();
-        });
-
         return element = el;
     }
 
@@ -130,10 +117,18 @@ export const renderElement = (jsx: JSXElement): RenderedDOM<JSXElement> => {
             props.$update?.call<any, any, any>(element!, new CustomEvent("update", { detail: element! }));
         },
         render(){
-            element && revokerMap.get(element)?.();
             return render();
         },
-        revoke(){ element && revokerMap.get(element)?.() },
+        revoke(){
+            currentJSX[1].$beforeUnmount?.call<any, any, any>(element!, new CustomEvent("beforeunmount", { detail: element! }));
+
+            for (const child of rendered_children)
+                child.revoke();
+            elementEvents.delete(element!);
+            element!.remove();
+            
+            currentJSX[1].$unmount?.();
+        },
         after(node) { element!.after(node) },
     }
 }
