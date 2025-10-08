@@ -1,5 +1,5 @@
 import { renderNode, type RenderedDOM, type UnknownRenderedDOM } from ".";
-import type { JSXElement, JSXNode } from "../../jsx";
+import type { JSXElement } from "../../jsx";
 import { diff } from "../diff";
 
 const elementEvents: WeakMap<HTMLElement, Record<string, Function | undefined | null>> = new WeakMap;
