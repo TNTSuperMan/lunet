@@ -43,5 +43,6 @@ export const renderComponent = (jsx: JSXComponent): RenderedDOM<JSXComponent> =>
             return rendered_dom.render();
         },
         revoke(){ rendered_dom?.revoke() },
+        after(node) { rendered_dom!.after(node) },
     }
 }

@@ -15,11 +15,7 @@ export const renderFragment = (jsx: JSXFragment): RenderedDOM<JSXFragment> => {
             const [,, ...old_children] = currentJSX;
             const [,, ...new_children] = jsx;
 
-            const patches = diff(old_children, new_children);
-            let removes = 0;
-
-            for (const [type, idx_, jsx] of patches) {
-                const idx = idx_ - removes;
+            for (const [type, idx, jsx] of diff(old_children, new_children)) {
                 switch(type){
                     case 0:
                         rendered_children[idx].update(jsx as any);
@@ -28,27 +24,13 @@ export const renderFragment = (jsx: JSXFragment): RenderedDOM<JSXFragment> => {
                         const rendered = renderNode(jsx);
                         rendered_children.splice(idx, 0, rendered);
                         const dom = rendered.render();
-                        let refNode: ChildNode | null = null; // TODO: ここら辺を最適化する
-                        if (mark && mark.parentNode) {
-                            let node: ChildNode | null = mark.nextSibling;
-                            let count = 0;
-                            while (node) {
-                                if (count === idx) {
-                                    refNode = node;
-                                    break;
-                                }
-                                node = node.nextSibling;
-                                count++;
-                            }
-                            if (refNode) {
-                                mark.parentNode.insertBefore(dom, refNode);
-                            } else {
-                                mark.parentNode.appendChild(dom);
-                            }
+                        if (idx === 0) {
+                            mark!.after(dom);
+                        } else {
+                            rendered_children[idx - 1].after(dom);
                         }
                         break;
                     case 2:
-                        removes++;
                         const [removed] = rendered_children.splice(idx, 1);
                         removed.revoke();
                         break;
@@ -71,6 +53,9 @@ export const renderFragment = (jsx: JSXFragment): RenderedDOM<JSXFragment> => {
         revoke(){
             for (const child of rendered_children)
                 child.revoke();
+        },
+        after(node) {
+            (rendered_children.at(-1) ?? mark)?.after(node);
         },
     }
 }

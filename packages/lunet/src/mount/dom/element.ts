@@ -100,10 +100,7 @@ export const renderElement = (jsx: JSXElement): RenderedDOM<JSXElement> => {
                 if((currentJSX[1] as any)[name] !== value)
                     setAttribute(element!, name, value);
 
-            const patches = diff(old_children, new_children);
-            let removes = 0;
-            for (const [type, idx_, jsx] of patches) {
-                const idx = idx_ - removes;
+            for (const [type, idx, jsx] of diff(old_children, new_children)) {
                 switch(type){
                     case 0:
                         rendered_children[idx].update(jsx as any);
@@ -111,18 +108,18 @@ export const renderElement = (jsx: JSXElement): RenderedDOM<JSXElement> => {
                     case 1:
                         const rendered = renderNode(jsx);
                         rendered_children.splice(idx, 0, rendered);
-
-                        const dom_index = rendered_children.reduce((p,c)=>p+c.flat().length, 0);
-                        const el = rendered.render();
-
-                        if(dom_index >= element!.childNodes.length)
-                            element!.append(el);
-                        else
-                            element!.childNodes[dom_index]!.before(el);
-
+                        const dom = rendered.render();
+                        if (idx === 0) {
+                            if (element!.firstChild) {
+                                element!.firstChild.before(dom);
+                            } else {
+                                element!.append(dom);
+                            }
+                        } else {
+                            rendered_children[idx - 1].after(dom);
+                        }
                         break;
                     case 2:
-                        removes++;
                         rendered_children.splice(idx, 1)[0].revoke();
                         break;
                 }
@@ -137,5 +134,6 @@ export const renderElement = (jsx: JSXElement): RenderedDOM<JSXElement> => {
             return render();
         },
         revoke(){ element && revokerMap.get(element)?.() },
+        after(node) { element!.after(node) },
     }
 }

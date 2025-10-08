@@ -17,20 +17,21 @@ export const diff = (
     const patches: Patch[] = [];
     const max = Math.max(before_nodes.length, after_nodes.length);
 
+    let index = 0;
     for(let i = 0;i < max;i++){
         const before = before_nodes[i];
         const after = after_nodes[i];
         
         if(!before && after)
-            patches.push([1, i, after]);
+            patches.push([1, index++, after]);
         else if(before && !after)
-            patches.push([2, i, after]);
+            patches.push([2, index, before]);
         else if(before && after)
             if(isCompatibleNode(before, after))
-                patches.push([0, i, after]);
+                patches.push([0, index++, after]);
             else{
-                patches.push([2, i, after]);
-                patches.push([1, i, after]);
+                patches.push([2, index, before]);
+                patches.push([1, index++, after]);
             }
     }
 

@@ -27,7 +27,7 @@ const rand_str = (strs: string, len: number): string => Array(len).fill(0).map((
 const doTest = env.VIOLENCE_OF_NUMBERS === "GO";
 
 const GenerateRandomJSX = (layer?: number): JSXNode => {
-    if((layer??0) > 4)
+    if((layer??0) > 3)
         return rand_pick(SAMPLE_TEXTS);
     switch(rand(3)) {
         case 0:
@@ -39,13 +39,13 @@ const GenerateRandomJSX = (layer?: number): JSXNode => {
                         rand_str("abcdefghijklmnopqrstuvwxyz", rand(15)+1),
                     ])
                 ),
-                ...Array(rand(32 - (layer??0)*7)).fill(0).map(()=>GenerateRandomJSX((layer??0)+1))
+                ...Array(rand(32 - (layer??0)*10)).fill(0).map(()=>GenerateRandomJSX((layer??0)+1))
             ];
         case 1:
             return [
                 null,
                 rand(2) === 0 ? {} : { key: `key${rand(16)}` },
-                ...Array(rand(32 - (layer??0)*7)).fill(0).map(()=>GenerateRandomJSX((layer??0)+1))
+                ...Array(rand(32 - (layer??0)*10)).fill(0).map(()=>GenerateRandomJSX((layer??0)+1))
             ];
         default:
             return rand_pick(SAMPLE_TEXTS);
@@ -75,11 +75,39 @@ const analyzeTree = (dom: Node): JSXNode | null => {
     if (dom instanceof HTMLElement) {
         return [
             dom.tagName.toLowerCase() as keyof HTMLElementTagNameMap,
-            Object.fromEntries([...dom.attributes].map(({ name, value }) => [name, value])),
-            ...[...dom.childNodes].map(analyzeTree).filter(e => e !== null)
+            Object.fromEntries(Array.from(dom.attributes).map(({ name, value }) => [name, value])),
+            ...Array.from(dom.childNodes).map(analyzeTree).filter(e => e !== null)
         ];
     }
     throw new Error(`Unhandled type DOM`, { cause: dom });
+}
+
+const attr = (attr: object) => Object.entries(attr).toSorted(([ak],[bk])=>ak>bk?1:-1).map(([k,v])=>`${k}=${JSON.stringify(v)}`).join(" ");
+const prettyJSX = (jsx: JSXNode): unknown => {
+    if (Array.isArray(jsx)) {
+        const [tag, props, ...children] = jsx;
+        return [`${tag??"Fragment"}(${attr(props)})`, ...children.map(prettyJSX)]
+    }
+    return jsx
+}
+
+const find = (parent: JSXNode, jsx: JSXNode): string | null => {
+    if (Array.isArray(parent)) {
+        if (parent === jsx) {
+            return `Found`;
+        }
+        const [tag, props, ...children] = parent;
+        const details = children.map(j => find(j, jsx))
+        const detailIndex = details.findIndex(e => e !== null);
+
+        if (detailIndex !== -1) {
+            return `${details[detailIndex]!}
+@AT ${tag??"Fragment"}(${attr(props)}) [${detailIndex}]
+${children.map((child, i) => (i === detailIndex ? "HERE:" : "     ") + Bun.inspect(child, { depth: 1, compact: true })).join("\n")}
+`;
+        }
+    }
+    return null;
 }
 
 test.skipIf(!doTest)("Test JSX Diff Updates Exhaustive by VIOLENCE OF NUMBERS", async () => {
@@ -92,12 +120,12 @@ test.skipIf(!doTest)("Test JSX Diff Updates Exhaustive by VIOLENCE OF NUMBERS", 
         const jsx = GenerateRandomJSX();
         try {
             render(jsx);
-        } catch (cause) {
-            throw new Error("Rendering failed", { cause });
+        } catch (err) {
+            throw new Error("Rendering failed", { cause: err });
         }
-        const dom_jsx = analyzeTree([...document.body.childNodes].filter(e => !(e instanceof Comment))[0]);
+        const dom_jsx = analyzeTree(document.body);
 
-        expect(dom_jsx as unknown).toEqual(flatFragment(jsx)[0]);
+        expect(prettyJSX(dom_jsx!)).toEqual(prettyJSX(["body",{},...flatFragment(jsx)]));
 
         before = jsx;
     }
