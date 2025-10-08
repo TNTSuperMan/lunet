@@ -27,8 +27,6 @@ const setAttribute = (el: HTMLElement, name: string, value: unknown) => {
             el.setAttribute(name, value);
             break;
         case "function":
-            console.error("function values cannot mount on attributes.");
-            break;
         case "object":
             if(value === null)
                 el.removeAttribute(name);
@@ -49,23 +47,6 @@ export const renderElement = (jsx: JSXElement): RenderedDOM<JSXElement> => {
 
     let rendered_children: UnknownRenderedDOM[] = [];
     let element: HTMLElement | void;
-
-    const render = () => {
-        const [tag, props, ...children] = currentJSX;
-
-        props.$beforeMount?.();
-        const el = document.createElement(tag);
-        elementEvents.set(el, {});
-        props.$mount?.call<any, any, any>(el, new CustomEvent("mount", { detail: el }));
-
-        for (const [name, value] of Object.entries(props))
-            setAttribute(el, name, value);
-
-        rendered_children = children.map(renderNode);
-        el.append(...rendered_children.map(e=>e.render()));
-
-        return element = el;
-    }
 
     return {
         type: 1,
@@ -94,8 +75,8 @@ export const renderElement = (jsx: JSXElement): RenderedDOM<JSXElement> => {
                         break;
                     case 1:
                         const rendered = renderNode(jsx);
-                        rendered_children.splice(idx, 0, rendered);
                         const dom = rendered.render();
+                        rendered_children.splice(idx, 0, rendered);
                         if (idx === 0) {
                             if (element!.firstChild) {
                                 element!.firstChild.before(dom);
@@ -117,7 +98,20 @@ export const renderElement = (jsx: JSXElement): RenderedDOM<JSXElement> => {
             props.$update?.call<any, any, any>(element!, new CustomEvent("update", { detail: element! }));
         },
         render(){
-            return render();
+            const [tag, props, ...children] = currentJSX;
+
+            props.$beforeMount?.();
+            const el = document.createElement(tag);
+            elementEvents.set(el, {});
+            props.$mount?.call<any, any, any>(el, new CustomEvent("mount", { detail: el }));
+
+            for (const [name, value] of Object.entries(props))
+                setAttribute(el, name, value);
+
+            rendered_children = children.map(renderNode);
+            el.append(...rendered_children.map(e=>e.render()));
+
+            return element = el;
         },
         revoke(){
             currentJSX[1].$beforeUnmount?.call<any, any, any>(element!, new CustomEvent("beforeunmount", { detail: element! }));

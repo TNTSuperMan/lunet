@@ -22,8 +22,8 @@ export const renderFragment = (jsx: JSXFragment): RenderedDOM<JSXFragment> => {
                         break;
                     case 1:
                         const rendered = renderNode(jsx);
-                        rendered_children.splice(idx, 0, rendered);
                         const dom = rendered.render();
+                        rendered_children.splice(idx, 0, rendered);
                         if (idx === 0) {
                             mark!.after(dom);
                         } else {

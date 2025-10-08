@@ -6,18 +6,12 @@ import { renderFragment } from "./fragment";
 export const renderComponent = (jsx: JSXComponent): RenderedDOM<JSXComponent> => {
     let currentJSX = jsx;
 
-    let rendered_dom = null as RenderedDOM<JSXFragment> | null;
-
+    let rendered_dom: RenderedDOM<JSXFragment> | null;
     let props: { [key: string]: unknown } | null;
-
-    const render = (jsx: JSXNode) => {
-        if(rendered_dom) rendered_dom.update([null, {}, jsx]);
-        else rendered_dom = renderFragment([null, {}, jsx]);
-    }
 
     return {
         type: 3,
-        flat: () => rendered_dom?.flat() ?? [],
+        flat: () => rendered_dom!.flat() ?? [],
         update(jsx){
             const [, afterProps/*, ...children*/] = currentJSX = jsx;
 
@@ -33,7 +27,10 @@ export const renderComponent = (jsx: JSXComponent): RenderedDOM<JSXComponent> =>
 
             const [component, init_props/*, ...children*/] = currentJSX;
 
-            props = component(render, { ...init_props });
+            props = component((jsx: JSXNode) => {
+                if(rendered_dom) rendered_dom.update([null, {}, jsx]);
+                else rendered_dom = renderFragment([null, {}, jsx]);
+            }, { ...init_props });
 
             if(!rendered_dom) {
                 console.error("never rendered Initial render.");
@@ -42,7 +39,7 @@ export const renderComponent = (jsx: JSXComponent): RenderedDOM<JSXComponent> =>
 
             return rendered_dom.render();
         },
-        revoke(){ rendered_dom?.revoke() },
+        revoke(){ rendered_dom!.revoke() },
         after(node) { rendered_dom!.after(node) },
     }
 }
