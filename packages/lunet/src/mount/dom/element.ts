@@ -103,17 +103,12 @@ export const renderElement = (jsx: JSXElement): RenderedDOM<JSXElement> => {
                 if((currentJSX[1] as any)[name] !== value)
                     setAttribute(element!, name, value);
 
-            const patches = diff(old_children, new_children);
-            let gap = 0;
-            for (const [type, idx_, jsx] of patches) {
-                let idx = idx_ + gap;
+            for (const [type, idx, jsx] of diff(old_children, new_children)) {
                 switch(type){
                     case 0:
                         rendered_children[idx].update(jsx as any);
                         break;
                     case 1:
-                        gap++;
-                        idx++;
                         const rendered = renderNode(jsx);
                         rendered_children.splice(idx, 0, rendered);
 
@@ -129,7 +124,6 @@ export const renderElement = (jsx: JSXElement): RenderedDOM<JSXElement> => {
 
                         break;
                     case 2:
-                        gap--;
                         rendered_children.splice(idx, 1)[0].revoke();
                         break;
                 }
