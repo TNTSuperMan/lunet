@@ -2,6 +2,7 @@ import { renderNode, type RenderedDOM, type UnknownRenderedDOM } from ".";
 import type { JSXElement, JSXNode } from "../../jsx";
 import { revokerMap } from "../revokerMap";
 import { diff } from "../diff";
+import { assert_jsx } from "../../assert/assert_jsx";
 
 const elementEvents: WeakMap<HTMLElement, Record<string, Function | undefined | null>> = new WeakMap;
 
@@ -88,6 +89,8 @@ export const renderElement = (jsx: JSXElement): RenderedDOM<JSXElement> => {
             
             const [, old_props, ...old_children] = currentJSX;
             const [, props, ...new_children] = jsx;
+
+            assert_jsx(typeof props === "object", `props expected object. but received ${props}, jsx: ${jsx}`, currentJSX);
 
             const removed_prop_keys = Object.keys(old_props).filter(key => !(key in props));
 

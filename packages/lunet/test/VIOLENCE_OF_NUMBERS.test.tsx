@@ -2,6 +2,7 @@ import { expect, test } from "bun:test";
 import { type JSXNode } from "../src";
 import { withRender } from "./utils/withRender";
 import { env } from "bun";
+import { LunetJSXAssertionError } from "../src/assert/error";
 
 const TEST_CASE_SEED = parseInt(env.VIOLENCE_OF_NUMBERS_SEED ?? "") || 14;
 const TEST_CASE_COUNT = 128;
@@ -91,6 +92,25 @@ const prettyJSX = (jsx: JSXNode): unknown => {
     return jsx
 }
 
+const find = (parent: JSXNode, jsx: JSXNode): string | null => {
+    if (Array.isArray(parent)) {
+        if (parent === jsx) {
+            return `Found`;
+        }
+        const [tag, props, ...children] = parent;
+        const details = children.map(j => find(j, jsx))
+        const detailIndex = details.findIndex(e => e !== null);
+
+        if (detailIndex !== -1) {
+            return `${details[detailIndex]!}
+@AT ${tag??"Fragment"}(${attr(props)}) [${detailIndex}]
+${children.map((child, i) => (i === detailIndex ? "HERE:" : "     ") + Bun.inspect(child, { depth: 1, compact: true })).join("\n")}
+`;
+        }
+    }
+    return null;
+}
+
 test.skipIf(!doTest)("Test JSX Diff Updates Exhaustive by VIOLENCE OF NUMBERS", async () => {
     const render = withRender();
 
@@ -101,8 +121,15 @@ test.skipIf(!doTest)("Test JSX Diff Updates Exhaustive by VIOLENCE OF NUMBERS", 
         const jsx = GenerateRandomJSX();
         try {
             render(jsx);
-        } catch (cause) {
-            throw new Error("Rendering failed", { cause });
+        } catch (err) {
+            if (err instanceof LunetJSXAssertionError) {
+                console.log(find(before!, err.cause as any));
+                const [,,...children] = jsx;
+                console.log(children.map(child => Bun.inspect(child, { depth: 1, compact: true })).join("\n"));
+                throw new Error(err.message);
+            } else {
+                throw new Error("Rendering failed", { cause: err });
+            }
         }
         const dom_jsx = analyzeTree(Array.from(document.body.childNodes).filter(e => !(e instanceof Comment))[0]);
 
