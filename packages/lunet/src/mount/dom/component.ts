@@ -11,7 +11,7 @@ export const renderComponent = (jsx: JSXComponent): RenderedDOM<JSXComponent> =>
 
     return {
         type: 3,
-        flat: () => rendered_dom!.flat() ?? [],
+        // flat: () => rendered_dom!.flat() ?? [],
         update(jsx){
             const [, afterProps/*, ...children*/] = currentJSX = jsx;
 

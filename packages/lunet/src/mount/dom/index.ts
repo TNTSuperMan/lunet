@@ -6,7 +6,7 @@ import { renderText } from "./text";
 
 export type RenderedDOM<T extends JSXNode> = {
     type: T extends string ? 0 : T extends JSXElement ? 1 : T extends JSXFragment ? 2 : T extends JSXComponent ? 3 : never, // 0 種類
-    flat(): (JSXElement | string)[], // 1 差分比較用のフラットJSX出力関数
+    // flat(): (JSXElement | string)[], // 1 差分比較用のフラットJSX出力関数
     update(jsx: T): void,              // 2 差分更新関数
     render(): Node,                    // 3 初回・トラブル時にフル描画をする関数
     revoke(): void,                    // 4 破棄関数

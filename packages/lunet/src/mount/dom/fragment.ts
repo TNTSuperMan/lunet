@@ -10,7 +10,7 @@ export const renderFragment = (jsx: JSXFragment): RenderedDOM<JSXFragment> => {
 
     return {
         type: 2,
-        flat: () => rendered_children.flatMap(e=>e.flat()),
+        // flat: () => rendered_children.flatMap(e=>e.flat()),
         update(jsx){
             const [,, ...old_children] = currentJSX;
             const [,, ...new_children] = jsx;
