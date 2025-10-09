@@ -1,13 +1,12 @@
-import type { JSXNode } from "../src";
 import "../test/utils/preload";
 import { withRender } from "../test/utils/withRender";
 import { bench, run } from "mitata";
 
 const TEST_CASE_SEED = parseInt(process.env.VIOLENCE_OF_NUMBERS_SEED ?? "") || 14;
 
-const SAMPLE_ELEMENT_TAGS: (keyof HTMLElementTagNameMap)[] = ["a", "button", "div", "code"];
-const SAMPLE_ATTRIBUTE_NAMES: string[] = ["name", "class", "id", "title"];
-const SAMPLE_TEXTS: string[] = ["Hey!", "Hello!", "Sample!", "TNTSuperMan"];
+const SAMPLE_ELEMENT_TAGS = ["a", "button", "div", "code"];
+const SAMPLE_ATTRIBUTE_NAMES = ["name", "class", "id", "title"];
+const SAMPLE_TEXTS = ["Hey!", "Hello!", "Sample!", "TNTSuperMan"];
 
 const float_rand = (() => {
     let x = TEST_CASE_SEED;
@@ -19,11 +18,11 @@ const float_rand = (() => {
     }
 })();
 
-const rand = (num: number): number => Math.floor(float_rand() * num);
-const rand_pick = <T extends string>(strs: T[]): T => strs[rand(strs.length)];
-const rand_str = (strs: string, len: number): string => Array(len).fill(0).map(() => strs[rand(strs.length)]).join("");
+const rand = (num) => Math.floor(float_rand() * num);
+const rand_pick = (strs) => strs[rand(strs.length)];
+const rand_str = (strs, len) => Array(len).fill(0).map(() => strs[rand(strs.length)]).join("");
 
-const GenerateRandomJSX = (layer?: number): JSXNode => {
+const GenerateRandomJSX = (layer) => {
     if((layer??0) > 3)
         return rand_pick(SAMPLE_TEXTS);
     switch(rand(3)) {
