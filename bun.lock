@@ -12,6 +12,7 @@
         "@types/rollup": "^0.54.0",
         "alien-signals": "^2.0.6",
         "bunup": "^0.9.3",
+        "mitata": "^1.0.34",
       },
       "peerDependencies": {
         "typescript": "^5.9.2",
@@ -19,11 +20,11 @@
     },
     "packages/lunet": {
       "name": "lunet",
-      "version": "0.0.4",
+      "version": "0.0.6",
     },
     "packages/lunet-transpiler": {
       "name": "lunet-transpiler",
-      "version": "0.0.1",
+      "version": "0.0.2",
       "dependencies": {
         "@babel/generator": "^7.28.3",
         "@babel/parser": "^7.28.3",
@@ -243,6 +244,8 @@
 
     "lunet-website": ["lunet-website@workspace:packages/lunet-website"],
 
+    "mitata": ["mitata@1.0.34", "", {}, "sha512-Mc3zrtNBKIMeHSCQ0XqRLo1vbdIx1wvFV9c8NJAiyho6AjNfMY8bVhbS12bwciUdd1t4rj8099CH3N3NFahaUA=="],
+
     "ms": ["ms@2.1.3", "", {}, "sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA=="],
 
     "oxc-minify": ["oxc-minify@0.77.3", "", { "optionalDependencies": { "@oxc-minify/binding-android-arm64": "0.77.3", "@oxc-minify/binding-darwin-arm64": "0.77.3", "@oxc-minify/binding-darwin-x64": "0.77.3", "@oxc-minify/binding-freebsd-x64": "0.77.3", "@oxc-minify/binding-linux-arm-gnueabihf": "0.77.3", "@oxc-minify/binding-linux-arm-musleabihf": "0.77.3", "@oxc-minify/binding-linux-arm64-gnu": "0.77.3", "@oxc-minify/binding-linux-arm64-musl": "0.77.3", "@oxc-minify/binding-linux-riscv64-gnu": "0.77.3", "@oxc-minify/binding-linux-s390x-gnu": "0.77.3", "@oxc-minify/binding-linux-x64-gnu": "0.77.3", "@oxc-minify/binding-linux-x64-musl": "0.77.3", "@oxc-minify/binding-wasm32-wasi": "0.77.3", "@oxc-minify/binding-win32-arm64-msvc": "0.77.3", "@oxc-minify/binding-win32-x64-msvc": "0.77.3" } }, "sha512-fYCSYazHno31eATVyHNyP2MEEMrVLaKVglac7bIoJC/qlb3x+Vqhv4eUViseOkoGM46rb9k8ZdDwhsEMtFUQhA=="],
@@ -290,6 +293,10 @@
     "bun-types/@types/node": ["@types/node@24.2.0", "", { "dependencies": { "undici-types": "~7.10.0" } }, "sha512-3xyG3pMCq3oYCNg7/ZP+E1ooTaGB4cG8JWRsqqOYQdbWNY4zbaV0Ennrd7stjiJEFZCaybcIgpTjJWHRfBSIDw=="],
 
     "happy-dom/@types/node": ["@types/node@20.19.19", "", { "dependencies": { "undici-types": "~6.21.0" } }, "sha512-pb1Uqj5WJP7wrcbLU7Ru4QtA0+3kAXrkutGiD26wUKzSMgNNaPARTUDQmElUXp64kh3cWdou3Q0C7qwwxqSFmg=="],
+
+    "lunet-website/lunet": ["lunet@0.0.4", "", {}, "sha512-QOg8u+MWbVTwyJgE9dJUFyoC0o6B0dXcqvBQb663YWGsSlBa7yjnabl6xaT7vSaMYNPsMempb7mS/wsfpnSKPA=="],
+
+    "lunet-website/lunet-transpiler": ["lunet-transpiler@0.0.1", "", { "dependencies": { "@babel/generator": "^7.28.3", "@babel/parser": "^7.28.3", "@babel/traverse": "^7.28.3", "@babel/types": "^7.28.2" } }, "sha512-EZ0PQgYEW04+tRepWG3dBoYw0UA6JAhA0OqQPzT7Kmwb3ust86YnrpIyoX7XOGYOryI3YI54F9m91z0h9WpuLg=="],
 
     "typeroll/@babel/parser": ["@babel/parser@7.28.0", "", { "dependencies": { "@babel/types": "^7.28.0" }, "bin": "./bin/babel-parser.js" }, "sha512-jVZGvOxOuNSsuQuLRTh13nU0AogFlw32w/MT+LV6D3sP5WdbW61E77RnkbaO2dUvmPAYrBDJXGn5gGS6tH4j8g=="],
 

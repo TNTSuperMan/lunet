@@ -14,7 +14,8 @@
     "@types/node": "^24.3.0",
     "@types/rollup": "^0.54.0",
     "alien-signals": "^2.0.6",
-    "bunup": "^0.9.3"
+    "bunup": "^0.9.3",
+    "mitata": "^1.0.34"
   },
   "peerDependencies": {
     "typescript": "^5.9.2"

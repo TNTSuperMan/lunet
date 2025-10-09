@@ -1,4 +1,3 @@
-import { expect } from "bun:test";
 import { createComponent, type JSXNode, render as renderDOM } from "../../src";
 
 export const withRender = (init?: JSXNode): (jsx: JSXNode) => void => {
@@ -9,8 +8,6 @@ export const withRender = (init?: JSXNode): (jsx: JSXNode) => void => {
         return {};
     });
     renderDOM(document.body, Component({}));
-
-    expect(render).toBeFunction();
 
     return render!;
 }
