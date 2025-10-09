@@ -1,4 +1,4 @@
-import { renderNode, type RenderedDOM, type UnknownRenderedDOM } from ".";
+import { afterNode, createNode, revokeNode, updateNode, type RenderedDOM } from ".";
 import type { JSXElement } from "../../jsx";
 import { diff } from "../diff";
 
@@ -42,87 +42,81 @@ const setAttribute = (el: HTMLElement, name: string, value: unknown) => {
     }
 }
 
-export const renderElement = (jsx: JSXElement): RenderedDOM<JSXElement> => {
-    let currentJSX = jsx;
+export const createElement = (jsx: JSXElement): [RenderedDOM<JSXElement>, HTMLElement] => {
+    const [tag, props, ...children] = jsx;
 
-    let rendered_children: UnknownRenderedDOM[] = [];
-    let element: HTMLElement | void;
+    props.$beforeMount?.();
+    const element = document.createElement(tag);
+    elementEvents.set(element, {});
+    props.$mount?.call<any, any, any>(element, new CustomEvent("mount", { detail: element }));
 
-    return {
-        // type: 1,
-        // flat: () => [currentJSX],
-        update(jsx){
-            currentJSX[1].$beforeUpdate?.call<any, any, any>(element!, new CustomEvent("beforeupdate", { detail: element! }));
-            
-            const [, old_props, ...old_children] = currentJSX;
-            const [, props, ...new_children] = jsx;
+    for (const [name, value] of Object.entries(props))
+        setAttribute(element, name, value);
 
-            const removed_prop_keys = Object.keys(old_props).filter(key => !(key in props));
+    const rendered_children = children.map(createNode);
+    element.append(...rendered_children.map(e=>e[1]));
 
-            for (const [name, value] of Object.entries({
-                ...props,
-                ...Object.fromEntries(
-                    removed_prop_keys.map(key => [key, undefined])
-                )
-            }))
-                if((currentJSX[1] as any)[name] !== value)
-                    setAttribute(element!, name, value);
+    return [[1, jsx, element, rendered_children.map(e=>e[0])], element];
+}
 
-            for (const [type, idx, jsx] of diff(old_children, new_children)) {
-                switch(type){
-                    case 0:
-                        rendered_children[idx].update(jsx as any);
-                        break;
-                    case 1:
-                        const rendered = renderNode(jsx);
-                        const dom = rendered.render();
-                        rendered_children.splice(idx, 0, rendered);
-                        if (idx === 0) {
-                            if (element!.firstChild) {
-                                element!.firstChild.before(dom);
-                            } else {
-                                element!.append(dom);
-                            }
-                        } else {
-                            rendered_children[idx - 1].after(dom);
-                        }
-                        break;
-                    case 2:
-                        rendered_children.splice(idx, 1)[0].revoke();
-                        break;
+export const updateElement = (dom: RenderedDOM<JSXElement>, jsx: JSXElement) => {
+    const [, [, old_props, ...old_children], element, rendered_children] = dom;
+    const [, new_props, ...new_children] = jsx;
+    old_props.$beforeUpdate?.call<any, any, any>(element, new CustomEvent("beforeupdate", { detail: element! }));
+
+
+    const removed_prop_keys = Object.keys(old_props).filter(key => !(key in new_props));
+
+    for (const [name, value] of Object.entries({
+        ...new_props,
+        ...Object.fromEntries(
+            removed_prop_keys.map(key => [key, undefined])
+        )
+    }))
+        if((old_props as any)[name] !== value)
+            setAttribute(element!, name, value);
+
+    for (const [type, idx, jsx] of diff(old_children, new_children)) {
+        switch(type){
+            case 0:
+                updateNode(rendered_children[idx], jsx);
+                break;
+            case 1:
+                const [rendered, node] = createNode(jsx);
+                rendered_children.splice(idx, 0, rendered);
+                if (idx === 0) {
+                    if (element!.firstChild) {
+                        element!.firstChild.before(node);
+                    } else {
+                        element!.append(node);
+                    }
+                } else {
+                    afterNode(rendered_children[idx - 1], node);
                 }
-            }
-
-            currentJSX = jsx;
-            
-            props.$update?.call<any, any, any>(element!, new CustomEvent("update", { detail: element! }));
-        },
-        render(){
-            const [tag, props, ...children] = currentJSX;
-
-            props.$beforeMount?.();
-            const el = document.createElement(tag);
-            elementEvents.set(el, {});
-            props.$mount?.call<any, any, any>(el, new CustomEvent("mount", { detail: el }));
-
-            for (const [name, value] of Object.entries(props))
-                setAttribute(el, name, value);
-
-            rendered_children = children.map(renderNode);
-            el.append(...rendered_children.map(e=>e.render()));
-
-            return element = el;
-        },
-        revoke(){
-            currentJSX[1].$beforeUnmount?.call<any, any, any>(element!, new CustomEvent("beforeunmount", { detail: element! }));
-
-            for (const child of rendered_children)
-                child.revoke();
-            elementEvents.delete(element!);
-            element!.remove();
-            
-            currentJSX[1].$unmount?.();
-        },
-        after(node) { element!.after(node) },
+                break;
+            case 2:
+                revokeNode(rendered_children.splice(idx, 1)[0]);
+                break;
+        }
     }
+
+    dom[1] = jsx;
+    
+    new_props.$update?.call<any, any, any>(element!, new CustomEvent("update", { detail: element! }));
+}
+
+export const revokeElement = (dom: RenderedDOM<JSXElement>) => {
+    const [, [, props], element, rendered_children] = dom;
+    props.$beforeUnmount?.call<any, any, any>(element!, new CustomEvent("beforeunmount", { detail: element! }));
+
+    for (const child of rendered_children)
+        revokeNode(child);
+    elementEvents.delete(element!);
+    element!.remove();
+    
+    props.$unmount?.();
+}
+
+export const afterElement = (dom: RenderedDOM<JSXElement>, node: Node) => {
+    dom[2].after(node);
 }
