@@ -7,7 +7,7 @@ export const createText = (jsx: string): [RenderedDOM<string>, Text] => {
 
 export const updateText = (dom: RenderedDOM<string>, jsx: string) => {
     if (dom[1] !== jsx)
-        dom[2]!.textContent = dom[1] = jsx;
+        dom[2].textContent = dom[1] = jsx;
 }
 
 export const revokeText = (dom: RenderedDOM<string>): void => (

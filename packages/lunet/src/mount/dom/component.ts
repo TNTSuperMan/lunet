@@ -30,7 +30,7 @@ export const createComponent = (jsx: JSXComponent): [RenderedDOM<JSXComponent>, 
             ] as JSXComponent,
             rendered_dom!
         ],
-        doc_frag!
+        doc_frag
     ];
 }
 
@@ -40,7 +40,7 @@ export const updateComponent = (dom: RenderedDOM<JSXComponent>, jsx: JSXComponen
 
     batch(() => {
         for (const [key, value] of Object.entries(new_props)) //@ts-ignore
-            if (old_props![key] !== value) old_props![key] = value;
+            if (old_props[key] !== value) old_props[key] = value;
     });
 }
 

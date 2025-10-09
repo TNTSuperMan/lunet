@@ -26,7 +26,7 @@ export const updateFragment = (dom: RenderedDOM<JSXFragment>, jsx: JSXFragment) 
                 const [rendered, el] = createNode(jsx);
                 rendered_children.splice(idx, 0, rendered);
                 if (idx === 0) {
-                    mark!.after(el);
+                    mark.after(el);
                 } else {
                     afterNode(rendered_children[idx - 1], el);
                 }
