@@ -3,7 +3,7 @@ import { type JSXNode } from "../src";
 import { withRender } from "./utils/withRender";
 import { env } from "bun";
 
-const TEST_CASE_SEED = parseInt(env.VIOLENCE_OF_NUMBERS_SEED ?? "") || 14;
+const TEST_CASE_SEED = parseInt(env.BRUTE_FORCE_SEED ?? "") || 14;
 const TEST_CASE_COUNT = 128;
 
 const SAMPLE_ELEMENT_TAGS: (keyof HTMLElementTagNameMap)[] = ["a", "button", "div", "code"];
@@ -24,7 +24,7 @@ const rand = (num: number): number => Math.floor(float_rand() * num);
 const rand_pick = <T extends string>(strs: T[]): T => strs[rand(strs.length)];
 const rand_str = (strs: string, len: number): string => Array(len).fill(0).map(() => strs[rand(strs.length)]).join("");
 
-const doTest = env.VIOLENCE_OF_NUMBERS === "GO";
+const doTest = env.BRUTE_FORCE_SEED === "GO";
 
 const GenerateRandomJSX = (layer?: number): JSXNode => {
     if((layer??0) > 3)
