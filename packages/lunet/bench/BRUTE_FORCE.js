@@ -12,7 +12,7 @@ const Component = createComponent(r => {
 });
 renderDOM(document.body, Component({}));
 
-const TEST_CASE_SEED = parseInt(process.env.VIOLENCE_OF_NUMBERS_SEED ?? "") || 14;
+const TEST_CASE_SEED = parseInt(process.env.BRUTE_FORCE_SEED ?? "") || 14;
 
 const SAMPLE_ELEMENT_TAGS = ["a", "button", "div", "code"];
 const SAMPLE_ATTRIBUTE_NAMES = ["name", "class", "id", "title"];
