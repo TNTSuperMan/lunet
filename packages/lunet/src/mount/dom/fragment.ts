@@ -5,7 +5,7 @@ import { diff } from "../diff";
 export const createFragment = (jsx: JSXFragment): [RenderedDOM<JSXFragment>, DocumentFragment] => {
     const [,, ...children] = jsx;
     const mark = new Comment;
-    const el = document.createDocumentFragment();
+    const el = new DocumentFragment;
 
     const rendered_children = children.map(createNode);
     el.append(mark, ...rendered_children.map(e=>e[1]));
