@@ -1,6 +1,16 @@
-import "../test/utils/preload";
-import { withRender } from "../test/utils/withRender";
+import { GlobalRegistrator } from "@happy-dom/global-registrator";
 import { bench, run } from "mitata";
+import { createComponent, render as renderDOM } from "../dist/index.js";
+
+GlobalRegistrator.register();
+
+let render;
+
+const Component = createComponent(r => {
+    render = r;
+    return {};
+});
+renderDOM(document.body, Component({}));
 
 const TEST_CASE_SEED = parseInt(process.env.VIOLENCE_OF_NUMBERS_SEED ?? "") || 14;
 
@@ -49,8 +59,6 @@ const GenerateRandomJSX = (layer) => {
 }
 
 const jsxnodes = Array(100).fill(0).map(() => GenerateRandomJSX());
-
-const render = withRender();
 
 bench("render", () => {
     for (const jsx of jsxnodes) {
