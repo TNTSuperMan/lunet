@@ -11,41 +11,26 @@ export type RenderedDOM<T extends JSXNode> =
     T extends JSXComponent ? [3, JSXComponent, RenderedDOM<JSXFragment>] :
     never;
 
+const funcMap = [
+    [updateText,      revokeText,      afterText     ],
+    [updateElement,   revokeElement,   afterElement  ],
+    [updateFragment,  revokeFragment,  afterFragment ],
+    [updateComponent, revokeComponent, afterComponent],
+] as const;
+
 export const createNode = (jsx: JSXNode): [RenderedDOM<any>, Node] => {
-    if(typeof jsx === "string"){
-        return createText(jsx);
-    }else if(typeof jsx[0] === "string"){
-        return createElement(jsx);
-    }else if(jsx[0] === null){
-        return createFragment(jsx);
-    }else{
-        return createComponent(jsx);
+    if (typeof jsx === "string") return createText(jsx);
+    if (Array.isArray(jsx)) {
+        const [tag] = jsx;
+        if (typeof tag === "string") return createElement(jsx);
+        if (typeof tag === "function") return createComponent(jsx);
+        if (tag === null) return createFragment(jsx);
     }
+    throw new Error(`Unrecognized JSX node`, { cause: jsx });
 }
 
-export const updateNode = (dom: RenderedDOM<any>, jsx: any) => {
-    switch (dom[0]) {
-        case 0: return updateText(dom, jsx);
-        case 1: return updateElement(dom, jsx);
-        case 2: return updateFragment(dom, jsx);
-        case 3: return updateComponent(dom, jsx);
-    }
-}
+export const updateNode = (dom: RenderedDOM<any>, jsx: any): void => funcMap[dom[0]][0](dom as any, jsx);
 
-export const revokeNode = (dom: RenderedDOM<any>) => {
-    switch (dom[0]) {
-        case 0: return revokeText(dom);
-        case 1: return revokeElement(dom);
-        case 2: return revokeFragment(dom);
-        case 3: return revokeComponent(dom);
-    }
-}
+export const revokeNode = (dom: RenderedDOM<any>): void => funcMap[dom[0]][1](dom as any);
 
-export const afterNode = (dom: RenderedDOM<any>, node: Node) => {
-    switch (dom[0]) {
-        case 0: return afterText(dom, node);
-        case 1: return afterElement(dom, node);
-        case 2: return afterFragment(dom, node);
-        case 3: return afterComponent(dom, node);
-    }
-}
+export const afterNode = (dom: RenderedDOM<any>, node: Node): void => funcMap[dom[0]][2](dom as any, node);
