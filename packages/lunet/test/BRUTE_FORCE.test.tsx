@@ -110,7 +110,7 @@ ${children.map((child, i) => (i === detailIndex ? "HERE:" : "     ") + Bun.inspe
     return null;
 }
 
-test.skipIf(!doTest)("Test JSX Diff Updates Exhaustive by VIOLENCE OF NUMBERS", async () => {
+test.skipIf(!doTest)("Test JSX Diff Updates Exhaustive by BRUTE FORCE", async () => {
     const render = withRender();
 
     let before: JSXNode | null = null;
