@@ -1,61 +1,56 @@
-import { renderNode, type RenderedDOM, type UnknownRenderedDOM } from ".";
+import { afterNode, createNode, revokeNode, updateNode, type RenderedDOM } from ".";
 import type { JSXFragment } from "../../jsx";
 import { diff } from "../diff";
 
-export const renderFragment = (jsx: JSXFragment): RenderedDOM<JSXFragment> => {
-    let currentJSX = jsx;
+export const createFragment = (jsx: JSXFragment): [RenderedDOM<JSXFragment>, DocumentFragment] => {
+    const [,, ...children] = jsx;
+    const mark = new Comment;
+    const el = document.createDocumentFragment();
 
-    let rendered_children: UnknownRenderedDOM[] = [];
-    let mark: Comment | void;
+    const rendered_children = children.map(createNode);
+    el.append(mark, ...rendered_children.map(e=>e[1]));
 
-    return {
-        // type: 2,
-        // flat: () => rendered_children.flatMap(e=>e.flat()),
-        update(jsx){
-            const [,, ...old_children] = currentJSX;
-            const [,, ...new_children] = jsx;
+    return [[2, jsx, mark, rendered_children.map(e=>e[0])], el];
+}
 
-            for (const [type, idx, jsx] of diff(old_children, new_children)) {
-                switch(type){
-                    case 0:
-                        rendered_children[idx].update(jsx as any);
-                        break;
-                    case 1:
-                        const rendered = renderNode(jsx);
-                        const dom = rendered.render();
-                        rendered_children.splice(idx, 0, rendered);
-                        if (idx === 0) {
-                            mark!.after(dom);
-                        } else {
-                            rendered_children[idx - 1].after(dom);
-                        }
-                        break;
-                    case 2:
-                        const [removed] = rendered_children.splice(idx, 1);
-                        removed.revoke();
-                        break;
+export const updateFragment = (dom: RenderedDOM<JSXFragment>, jsx: JSXFragment) => {
+    const [, [,, ...old_children], mark, rendered_children] = dom;
+    const [,, ...new_children] = jsx;
+
+    for (const [type, idx, jsx] of diff(old_children, new_children)) {
+        switch(type){
+            case 0:
+                updateNode(rendered_children[idx], jsx);
+                break;
+            case 1:
+                const [rendered, el] = createNode(jsx);
+                rendered_children.splice(idx, 0, rendered);
+                if (idx === 0) {
+                    mark!.after(el);
+                } else {
+                    afterNode(rendered_children[idx - 1], el);
                 }
-            }
-            
-            currentJSX = jsx;
-        },
-        render(){
-            const [,, ...children] = currentJSX;
-
-            const el = document.createDocumentFragment();
-            mark = document.createComment("");
-
-            rendered_children = children.map(renderNode);
-            el.append(mark, ...rendered_children.map(e=>e.render()));
-
-            return el;
-        },
-        revoke(){
-            for (const child of rendered_children)
-                child.revoke();
-        },
-        after(node) {
-            (rendered_children.at(-1) ?? mark)?.after(node);
-        },
+                break;
+            case 2:
+                const [removed] = rendered_children.splice(idx, 1);
+                revokeNode(removed);
+                break;
+        }
     }
+    
+    dom[1] = jsx;
+}
+
+export const revokeFragment = (dom: RenderedDOM<JSXFragment>) => {
+    for (const child of dom[3])
+        revokeNode(child);
+    dom[2].remove();
+}
+
+export const afterFragment = (dom: RenderedDOM<JSXFragment>, node: Node) => {
+    const last_rendered_dom = dom[3].at(-1);
+    if (last_rendered_dom)
+        afterNode(last_rendered_dom, node);
+    else
+        dom[2].after(node);
 }

@@ -1,45 +1,53 @@
 import { type RenderedDOM } from ".";
 import { batch } from "../../batch";
 import type { JSXComponent, JSXFragment, JSXNode } from "../../jsx";
-import { renderFragment } from "./fragment";
+import { afterFragment, createFragment, revokeFragment, updateFragment } from "./fragment";
 
-export const renderComponent = (jsx: JSXComponent): RenderedDOM<JSXComponent> => {
-    let currentJSX = jsx;
+export const createComponent = (jsx: JSXComponent): [RenderedDOM<JSXComponent>, DocumentFragment] => {
+    const [component, init_props/* , ...children */] = jsx;
 
-    let rendered_dom: RenderedDOM<JSXFragment> | null;
-    let props: { [key: string]: unknown } | null;
+    let rendered_dom: RenderedDOM<JSXFragment> | void;
+    let doc_frag: DocumentFragment | void;
 
-    return {
-        // type: 3,
-        // flat: () => rendered_dom!.flat() ?? [],
-        update(jsx){
-            const [, afterProps/*, ...children*/] = currentJSX = jsx;
+    const props = component((jsx: JSXNode) => {
+        if (rendered_dom) updateFragment(rendered_dom, [null, {}, jsx]);
+        else [rendered_dom, doc_frag] = createFragment([null, {}, jsx]);
+    }, { ...init_props });
 
-            batch(() => {
-                for (const [key, value] of Object.entries(afterProps))
-                    if (props![key] !== value)
-                        props![key] = value;
-            });
-        },
-        render(){
-            rendered_dom?.revoke();
-            rendered_dom = null;
-
-            const [component, init_props/*, ...children*/] = currentJSX;
-
-            props = component((jsx: JSXNode) => {
-                if(rendered_dom) rendered_dom.update([null, {}, jsx]);
-                else rendered_dom = renderFragment([null, {}, jsx]);
-            }, { ...init_props });
-
-            if(!rendered_dom) {
-                console.error("never rendered Initial render.");
-                rendered_dom = renderFragment([null, {}]);
-            }
-
-            return rendered_dom.render();
-        },
-        revoke(){ rendered_dom!.revoke() },
-        after(node) { rendered_dom!.after(node) },
+    //@ts-ignore
+    if (!doc_frag) {
+        console.error("never rendered Initial render.");
+        [rendered_dom, doc_frag] = createFragment([null, {}]);
     }
+
+    return [
+        [
+            3,
+            [
+                component,
+                props,
+                /* ...children */
+            ] as JSXComponent,
+            rendered_dom!
+        ],
+        doc_frag!
+    ];
 }
+
+export const updateComponent = (dom: RenderedDOM<JSXComponent>, jsx: JSXComponent) => {
+    const old_props = dom[1][1];
+    const new_props = jsx[1];
+
+    batch(() => {
+        for (const [key, value] of Object.entries(new_props)) //@ts-ignore
+            if (old_props![key] !== value) old_props![key] = value;
+    });
+}
+
+export const revokeComponent = (dom: RenderedDOM<JSXComponent>) => (
+    revokeFragment(dom[2])
+)
+
+export const afterComponent = (dom: RenderedDOM<JSXComponent>, node: Node) => (
+    afterFragment(dom[2], node)
+)

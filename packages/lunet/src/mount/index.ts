@@ -1,16 +1,17 @@
 import type { JSXNode } from "../jsx";
-import { renderNode, type UnknownRenderedDOM } from "./dom";
+import { createNode, revokeNode, type RenderedDOM } from "./dom";
 
 type RenderFunction = (el: HTMLElement, jsx: JSXNode) => void;
 
-const rootMap = new WeakMap<HTMLElement, UnknownRenderedDOM>();
+const rootMap = new WeakMap<HTMLElement, RenderedDOM<any>>();
 
 export const render: RenderFunction = (el, jsx) => {
-    rootMap.get(el)?.revoke();
+    if (rootMap.has(el))
+        revokeNode(rootMap.get(el)!);
 
-    const root = renderNode(jsx);
+    const [root, node] = createNode(jsx);
 
     rootMap.set(el, root);
 
-    el.append(root.render());
+    el.append(node);
 }
