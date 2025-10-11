@@ -20,6 +20,7 @@ export const render: RenderFunction = (el, jsx) => {
     }
 
     el.append(node);
+    console.log(el.innerHTML);
 
     if (node.nodeType === 8) {
         siblingDomQueue.splice(0).forEach(fn => fn());

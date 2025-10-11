@@ -4,6 +4,8 @@ import type { JSXComponent, JSXFragment, JSXNode } from "../../jsx";
 import { flushDOMUpdates } from "../queue";
 import { afterFragment, createFragment, revokeFragment, updateFragment } from "./fragment";
 
+//let l = 0;
+
 export const createComponent = (jsx: JSXComponent): [RenderedDOM<JSXComponent>, Comment] => {
     const [component, init_props/* , ...children */] = jsx;
 
@@ -12,8 +14,9 @@ export const createComponent = (jsx: JSXComponent): [RenderedDOM<JSXComponent>, 
 
     const props = component((jsx: JSXNode) => {
         if (rendered_dom) {
+            //l++;
             updateFragment(rendered_dom, [null, {}, jsx]);
-            flushDOMUpdates();
+            //if (!--l) flushDOMUpdates();
         }
         else [rendered_dom, doc_mark] = createFragment([null, {}, jsx]);
     }, { ...init_props });

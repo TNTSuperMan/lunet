@@ -16,5 +16,5 @@ export const revokeText = (dom: RenderedDOM<string>): void => (
 )
 
 export const afterText = (dom: RenderedDOM<string>, node: Node): void => (
-    queueSibilingDOMUpdate(dom[2].parentNode!.insertBefore.bind(dom[2].parentNode!, node, dom[2].nextSibling))
+    queueSibilingDOMUpdate(() => dom[2].parentNode!.insertBefore(node, dom[2].nextSibling))
 )
