@@ -1,5 +1,6 @@
 import type { JSXNode } from "../jsx";
 import { createNode, revokeNode, type RenderedDOM } from "./dom";
+import { domQueue, flushDOMUpdates, siblingDomQueue } from "./queue";
 
 type RenderFunction = (el: HTMLElement, jsx: JSXNode) => void;
 
@@ -13,5 +14,14 @@ export const render: RenderFunction = (el, jsx) => {
 
     rootMap.set(el, root);
 
+    domQueue.splice(0).forEach(fn => fn());
+    if (node.nodeType !== 8) {
+        siblingDomQueue.splice(0).forEach(fn => fn());
+    }
+
     el.append(node);
+
+    if (node.nodeType === 8) {
+        siblingDomQueue.splice(0).forEach(fn => fn());
+    }
 }

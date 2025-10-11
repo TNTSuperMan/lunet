@@ -1,16 +1,17 @@
 import { afterNode, createNode, revokeNode, updateNode, type RenderedDOM } from ".";
 import type { JSXFragment } from "../../jsx";
 import { diff } from "../diff";
+import { queueDOMUpdate, queueSibilingDOMUpdate } from "../queue";
 
-export const createFragment = (jsx: JSXFragment): [RenderedDOM<JSXFragment>, DocumentFragment] => {
+export const createFragment = (jsx: JSXFragment): [RenderedDOM<JSXFragment>, Comment] => {
     const [,, ...children] = jsx;
     const mark = new Comment;
-    const el = new DocumentFragment;
 
     const rendered_children = children.map(createNode);
-    el.append(mark, ...rendered_children.map(e=>e[1]));
+    if (rendered_children.length)
+        queueSibilingDOMUpdate(mark.after.bind(mark, ...rendered_children.map(e=>e[1])));
 
-    return [[2, jsx, mark, rendered_children.map(e=>e[0])], el];
+    return [[2, jsx, mark, rendered_children.map(e=>e[0])], mark];
 }
 
 export const updateFragment = (dom: RenderedDOM<JSXFragment>, jsx: JSXFragment) => {
@@ -26,7 +27,7 @@ export const updateFragment = (dom: RenderedDOM<JSXFragment>, jsx: JSXFragment) 
                 const [rendered, el] = createNode(jsx);
                 rendered_children.splice(idx, 0, rendered);
                 if (idx === 0) {
-                    mark.after(el);
+                    queueSibilingDOMUpdate(mark.after.bind(mark, el));
                 } else {
                     afterNode(rendered_children[idx - 1], el);
                 }
@@ -44,7 +45,7 @@ export const updateFragment = (dom: RenderedDOM<JSXFragment>, jsx: JSXFragment) 
 export const revokeFragment = (dom: RenderedDOM<JSXFragment>) => {
     for (const child of dom[3])
         revokeNode(child);
-    dom[2].remove();
+    queueDOMUpdate(dom[2].remove.bind(dom[2]));
 }
 
 export const afterFragment = (dom: RenderedDOM<JSXFragment>, node: Node) => {
@@ -52,5 +53,5 @@ export const afterFragment = (dom: RenderedDOM<JSXFragment>, node: Node) => {
     if (last_rendered_dom)
         afterNode(last_rendered_dom, node);
     else
-        dom[2].after(node);
+        queueSibilingDOMUpdate(dom[2].after.bind(dom[2], node));
 }

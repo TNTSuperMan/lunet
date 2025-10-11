@@ -1,23 +1,27 @@
 import { type RenderedDOM } from ".";
 import { batch } from "../../batch";
 import type { JSXComponent, JSXFragment, JSXNode } from "../../jsx";
+import { flushDOMUpdates } from "../queue";
 import { afterFragment, createFragment, revokeFragment, updateFragment } from "./fragment";
 
-export const createComponent = (jsx: JSXComponent): [RenderedDOM<JSXComponent>, DocumentFragment] => {
+export const createComponent = (jsx: JSXComponent): [RenderedDOM<JSXComponent>, Comment] => {
     const [component, init_props/* , ...children */] = jsx;
 
     let rendered_dom: RenderedDOM<JSXFragment> | void;
-    let doc_frag: DocumentFragment | void;
+    let doc_mark: Comment | void;
 
     const props = component((jsx: JSXNode) => {
-        if (rendered_dom) updateFragment(rendered_dom, [null, {}, jsx]);
-        else [rendered_dom, doc_frag] = createFragment([null, {}, jsx]);
+        if (rendered_dom) {
+            updateFragment(rendered_dom, [null, {}, jsx]);
+            flushDOMUpdates();
+        }
+        else [rendered_dom, doc_mark] = createFragment([null, {}, jsx]);
     }, { ...init_props });
 
     //@ts-ignore
-    if (!doc_frag) {
+    if (!doc_mark) {
         console.error("never rendered Initial render.");
-        [rendered_dom, doc_frag] = createFragment([null, {}]);
+        [rendered_dom, doc_mark] = createFragment([null, {}]);
     }
 
     return [
@@ -30,7 +34,7 @@ export const createComponent = (jsx: JSXComponent): [RenderedDOM<JSXComponent>, 
             ] as JSXComponent,
             rendered_dom!
         ],
-        doc_frag
+        doc_mark
     ];
 }
 

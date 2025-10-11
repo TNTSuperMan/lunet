@@ -1,6 +1,7 @@
 import { afterNode, createNode, revokeNode, updateNode, type RenderedDOM } from ".";
 import type { JSXElement } from "../../jsx";
 import { diff } from "../diff";
+import { queueDOMUpdate, queueSibilingDOMUpdate } from "../queue";
 
 const lifecycle_events = new Set([
     "beforeMount",
@@ -23,7 +24,7 @@ const setAttribute = (el: HTMLElement, name: string, value: unknown) => {
         if (!lifecycle_events.has(ev_name)) {
             const events = elementEvents.get(el)!;
             if(!(ev_name in events))
-                el.addEventListener(ev_name, handleEvent);
+                queueDOMUpdate(el.addEventListener.bind(el, ev_name, handleEvent));
             if (typeof value === "function" || value == null)
                 events[ev_name] = value;
             else {
@@ -33,20 +34,20 @@ const setAttribute = (el: HTMLElement, name: string, value: unknown) => {
         }
     } else switch(typeof value){
         case "string":
-            el.setAttribute(name, value);
+            queueDOMUpdate(el.setAttribute.bind(el, name, value));
             break;
         case "function":
         case "object":
             if(value === null)
-                el.removeAttribute(name);
+                queueDOMUpdate(el.removeAttribute.bind(el, name));
             else
                 console.error(`${typeof value} values cannot mount on attributes.`);
             break;
         default:
             if(value === undefined)
-                el.removeAttribute(name);
+                queueDOMUpdate(el.removeAttribute.bind(el, name));
             else
-                el.setAttribute(name, String(value));
+                queueDOMUpdate(el.setAttribute.bind(el, name, String(value)));
             break;
     }
 }
@@ -63,7 +64,8 @@ export const createElement = (jsx: JSXElement): [RenderedDOM<JSXElement>, HTMLEl
         setAttribute(element, name, value);
 
     const rendered_children = children.map(createNode);
-    element.append(...rendered_children.map(e=>e[1]));
+    if (rendered_children.length)
+        queueDOMUpdate(element.append.bind(element, ...rendered_children.map(e=>e[1])));
 
     return [[1, jsx, element, rendered_children.map(e=>e[0])], element];
 }
@@ -97,7 +99,7 @@ export const updateElement = (dom: RenderedDOM<JSXElement>, jsx: JSXElement) => 
                     if (element.firstChild) {
                         element.firstChild.before(node);
                     } else {
-                        element.append(node);
+                        queueDOMUpdate(element.append.bind(element, node));
                     }
                 } else {
                     afterNode(rendered_children[idx - 1], node);
@@ -121,11 +123,17 @@ export const revokeElement = (dom: RenderedDOM<JSXElement>) => {
     for (const child of rendered_children)
         revokeNode(child);
     elementEvents.delete(element);
-    element.remove();
-    
-    props.$unmount?.();
+
+    if ("$unmount" in props) {
+        queueDOMUpdate(() => {
+            element.remove();
+            props.$unmount?.();
+        });
+    } else {
+        queueDOMUpdate(element.remove.bind(element));
+    }
 }
 
 export const afterElement = (dom: RenderedDOM<JSXElement>, node: Node) => {
-    dom[2].after(node);
+    queueSibilingDOMUpdate(dom[2].after.bind(dom[2], node));
 }

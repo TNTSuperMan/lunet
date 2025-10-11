@@ -1,4 +1,5 @@
 import type { RenderedDOM } from ".";
+import { queueDOMUpdate, queueSibilingDOMUpdate } from "../queue";
 
 export const createText = (jsx: string): [RenderedDOM<string>, Text] => {
     const node = new Text(jsx);
@@ -11,9 +12,9 @@ export const updateText = (dom: RenderedDOM<string>, jsx: string) => {
 }
 
 export const revokeText = (dom: RenderedDOM<string>): void => (
-    dom[2].remove()
+    queueDOMUpdate(dom[2].remove.bind(dom[2]))
 )
 
-export const afterText = (dom: RenderedDOM<string>, node: Node): void => {
-    dom[2].parentNode?.insertBefore(node, dom[2].nextSibling)
-}
+export const afterText = (dom: RenderedDOM<string>, node: Node): void => (
+    queueSibilingDOMUpdate(dom[2].parentNode!.insertBefore.bind(dom[2].parentNode!, node, dom[2].nextSibling))
+)
