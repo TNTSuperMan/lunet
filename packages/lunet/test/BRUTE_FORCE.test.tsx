@@ -24,7 +24,7 @@ const rand = (num: number): number => Math.floor(float_rand() * num);
 const rand_pick = <T extends string>(strs: T[]): T => strs[rand(strs.length)];
 const rand_str = (strs: string, len: number): string => Array(len).fill(0).map(() => strs[rand(strs.length)]).join("");
 
-const doTest = env.BRUTE_FORCE_SEED === "GO";
+const doTest = env.BRUTE_FORCE === "GO";
 
 const GenerateRandomJSX = (layer?: number): JSXNode => {
     if((layer??0) > 3)
