@@ -6,7 +6,7 @@ export const queueDOMUpdate = (fn: () => unknown) => {
 }
 
 export const queueSibilingDOMUpdate = (fn: () => unknown) => {
-    siblingDomQueue.unshift(fn);
+    siblingDomQueue.push(fn);
 }
 
 export const flushDOMUpdates = () => {
