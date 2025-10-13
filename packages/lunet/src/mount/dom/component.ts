@@ -17,6 +17,7 @@ export const createComponent = (jsx: JSXComponent): [RenderedDOM<JSXComponent>, 
             //l++;
             updateFragment(rendered_dom, [null, {}, jsx]);
             //if (!--l) flushDOMUpdates();
+            flushDOMUpdates();
         }
         else [rendered_dom, doc_mark] = createFragment([null, {}, jsx]);
     }, { ...init_props });
