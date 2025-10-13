@@ -1,7 +1,7 @@
 import { afterNode, createNode, revokeNode, updateNode, type RenderedDOM } from ".";
 import type { JSXFragment } from "../../jsx";
 import { diff } from "../diff";
-import { queueDOMUpdate, queueSibilingDOMUpdate } from "../queue";
+import { queueDOMUpdate } from "../queue";
 
 export const createFragment = (jsx: JSXFragment): [RenderedDOM<JSXFragment>, Comment] => {
     const [,, ...children] = jsx;
@@ -9,7 +9,7 @@ export const createFragment = (jsx: JSXFragment): [RenderedDOM<JSXFragment>, Com
 
     const rendered_children = children.map(createNode);
     if (rendered_children.length)
-        queueSibilingDOMUpdate(mark.after.bind(mark, ...rendered_children.map(e=>e[1])));
+        queueDOMUpdate(mark.after.bind(mark, ...rendered_children.map(e=>e[1])));
 
     return [[2, jsx, mark, rendered_children.map(e=>e[0])], mark];
 }
@@ -27,7 +27,7 @@ export const updateFragment = (dom: RenderedDOM<JSXFragment>, jsx: JSXFragment) 
                 const [rendered, el] = createNode(jsx);
                 rendered_children.splice(idx, 0, rendered);
                 if (idx === 0) {
-                    queueSibilingDOMUpdate(mark.after.bind(mark, el));
+                    queueDOMUpdate(mark.after.bind(mark, el));
                 } else {
                     afterNode(rendered_children[idx - 1], el);
                 }
@@ -53,5 +53,5 @@ export const afterFragment = (dom: RenderedDOM<JSXFragment>, node: Node) => {
     if (last_rendered_dom)
         afterNode(last_rendered_dom, node);
     else
-        queueSibilingDOMUpdate(dom[2].after.bind(dom[2], node));
+        queueDOMUpdate(dom[2].after.bind(dom[2], node));
 }

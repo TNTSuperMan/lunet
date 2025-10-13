@@ -1,7 +1,7 @@
 import { afterNode, createNode, revokeNode, updateNode, type RenderedDOM } from ".";
 import type { JSXElement } from "../../jsx";
 import { diff } from "../diff";
-import { queueDOMUpdate, queueSibilingDOMUpdate } from "../queue";
+import { queueDOMUpdate } from "../queue";
 
 const lifecycle_events = new Set([
     "beforeMount",
@@ -135,5 +135,5 @@ export const revokeElement = (dom: RenderedDOM<JSXElement>) => {
 }
 
 export const afterElement = (dom: RenderedDOM<JSXElement>, node: Node) => {
-    queueSibilingDOMUpdate(dom[2].after.bind(dom[2], node));
+    queueDOMUpdate(dom[2].after.bind(dom[2], node));
 }
