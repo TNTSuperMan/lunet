@@ -1,9 +1,13 @@
 import { test, expect, mock } from "bun:test";
+import { drainMicrotasks } from "bun:jsc";
 import { withRender } from "./utils/withRender";
 import { h, fragment } from "../src";
+import { pureNode, pureNodes } from "./utils/pure_node";
+import type { JSXNode } from "../src";
 
 test("Test lifecycle events", () => {
-    const render = withRender();
+    const r = withRender();
+    const render = (jsx: JSXNode) => { r(jsx); drainMicrotasks(); }
 
     const history: number[] = [];
     const elements: HTMLElement[] = [];
@@ -23,7 +27,7 @@ test("Test lifecycle events", () => {
         expect(ev).toBeInstanceOf(CustomEvent);
         expect(ev.type).toBe("beforeupdate");
         expect(this).toBe(ev.detail);
-        expect(document.body.childNodes).toContain(ev.detail);
+        expect(pureNodes(document.body.childNodes)).toContain(pureNode(ev.detail));
         history.push(2);
         elements.push(ev.detail);
     });
@@ -31,7 +35,7 @@ test("Test lifecycle events", () => {
         expect(ev).toBeInstanceOf(CustomEvent);
         expect(ev.type).toBe("update");
         expect(this).toBe(ev.detail);
-        expect(document.body.childNodes).toContain(ev.detail);
+        expect(pureNodes(document.body.childNodes)).toContain(pureNode(ev.detail));
         history.push(3);
         elements.push(ev.detail);
     });
@@ -39,12 +43,12 @@ test("Test lifecycle events", () => {
         expect(ev).toBeInstanceOf(CustomEvent);
         expect(ev.type).toBe("beforeunmount");
         expect(this).toBe(ev.detail);
-        expect(document.body.childNodes).toContain(ev.detail);
+        expect(pureNodes(document.body.childNodes)).toContain(pureNode(ev.detail));
         history.push(4);
         elements.push(ev.detail);
     });
     const unmount = mock(() => {
-        expect(document.body.childNodes).not.toContain(elements[0]);
+        expect(pureNodes(document.body.childNodes)).not.toContain(pureNode(elements[0]));
         history.push(5);
     });
 
