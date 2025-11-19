@@ -45,13 +45,13 @@ const GenerateRandomJSX = (layer) => {
                         rand_str("abcdefghijklmnopqrstuvwxyz", rand(15)+1),
                     ])
                 ),
-                ...Array(rand(32 - (layer??0)*10)).fill(0).map(()=>GenerateRandomJSX((layer??0)+1))
+                Array(rand(32 - (layer??0)*10)).fill(0).map(()=>GenerateRandomJSX((layer??0)+1))
             ];
         case 1:
             return [
                 null,
                 rand(2) === 0 ? {} : { key: `key${rand(16)}` },
-                ...Array(rand(32 - (layer??0)*10)).fill(0).map(()=>GenerateRandomJSX((layer??0)+1))
+                Array(rand(32 - (layer??0)*10)).fill(0).map(()=>GenerateRandomJSX((layer??0)+1))
             ];
         default:
             return rand_pick(SAMPLE_TEXTS);

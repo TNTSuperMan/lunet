@@ -31,13 +31,13 @@ const GenerateRandomJSX = (layer = 0): JSXNode => {
                         rand_str("abcdefghijklmnopqrstuvwxyz", rand(15)+1),
                     ])
                 ),
-                ...Array(rand(32 - layer*5)).fill(0).map(()=>GenerateRandomJSX(layer+1))
+                Array(rand(32 - layer*5)).fill(0).map(()=>GenerateRandomJSX(layer+1))
             ];
         case 1:
             return [
                 null,
                 rand(2) === 0 ? {} : { key: `key${rand(16)}` },
-                ...Array(rand(32 - layer*5)).fill(0).map(()=>GenerateRandomJSX(layer+1))
+                Array(rand(32 - layer*5)).fill(0).map(()=>GenerateRandomJSX(layer+1))
             ];
         default:
             return rand_pick(SAMPLE_TEXTS);
@@ -46,7 +46,7 @@ const GenerateRandomJSX = (layer = 0): JSXNode => {
 
 export async function benchmark(el: HTMLElement): Promise<Record<string, any>> {
     let render = null! as (jsx: JSXNode) => void;
-    renderDOM(el,[(r:typeof render)=>{(render=r)([null,{}]);return{}},{}]);
+    renderDOM(el,[(r:typeof render)=>{(render=r)([null,{},[]]);return{}},{},[]]);
 
     const jsxs_start = performance.now();
     const jsxs = Array(32).fill(0).map(() => GenerateRandomJSX());

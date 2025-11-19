@@ -10,7 +10,7 @@ type JSXFactoryFunction = <T extends keyof HTMLElementTagNameMap | Component<any
 
 export const h: JSXFactoryFunction = (type, props, ...children) =>
     typeof type === "string"
-        ? [type, props ?? {}, ...children]
+        ? [type, props ?? {}, children]
         : type === fragment
-            ? [null, props ?? {}, ...children]
+            ? [null, props ?? {}, children]
             : type(props);

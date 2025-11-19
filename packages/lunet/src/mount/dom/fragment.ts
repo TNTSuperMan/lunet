@@ -3,7 +3,7 @@ import type { JSXFragment } from "../../jsx";
 import { diff } from "../diff";
 
 export const createFragment = (jsx: JSXFragment): [RenderedDOM<JSXFragment>, DocumentFragment] => {
-    const [,, ...children] = jsx;
+    const [,, children] = jsx;
     const mark = new Comment;
     const el = new DocumentFragment;
 
@@ -14,8 +14,8 @@ export const createFragment = (jsx: JSXFragment): [RenderedDOM<JSXFragment>, Doc
 }
 
 export const updateFragment = (dom: RenderedDOM<JSXFragment>, jsx: JSXFragment) => {
-    const [, [,, ...old_children], mark, rendered_children] = dom;
-    const [,, ...new_children] = jsx;
+    const [, [,, old_children], mark, rendered_children] = dom;
+    const [,, new_children] = jsx;
 
     for (const [type, idx, jsx] of diff(old_children, new_children)) {
         switch(type){

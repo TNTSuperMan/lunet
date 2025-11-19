@@ -52,7 +52,7 @@ const setAttribute = (el: HTMLElement, name: string, value: unknown) => {
 }
 
 export const createElement = (jsx: JSXElement): [RenderedDOM<JSXElement>, HTMLElement] => {
-    const [tag, props, ...children] = jsx;
+    const [tag, props, children] = jsx;
 
     props.$beforeMount?.();
     const element = document.createElement(tag);
@@ -69,8 +69,8 @@ export const createElement = (jsx: JSXElement): [RenderedDOM<JSXElement>, HTMLEl
 }
 
 export const updateElement = (dom: RenderedDOM<JSXElement>, jsx: JSXElement) => {
-    const [, [, old_props, ...old_children], element, rendered_children] = dom;
-    const [, new_props, ...new_children] = jsx;
+    const [, [, old_props, old_children], element, rendered_children] = dom;
+    const [, new_props, new_children] = jsx;
     old_props.$beforeUpdate?.call<any, any, any>(element, new CustomEvent("beforeupdate", { detail: element }));
 
 

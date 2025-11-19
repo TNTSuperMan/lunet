@@ -10,14 +10,14 @@ export const createComponent = (jsx: JSXComponent): [RenderedDOM<JSXComponent>, 
     let doc_frag: DocumentFragment | void;
 
     const props = component((jsx: JSXNode) => {
-        if (rendered_dom) updateFragment(rendered_dom, [null, {}, jsx]);
-        else [rendered_dom, doc_frag] = createFragment([null, {}, jsx]);
+        if (rendered_dom) updateFragment(rendered_dom, [null, {}, [jsx]]);
+        else [rendered_dom, doc_frag] = createFragment([null, {}, [jsx]]);
     }, { ...init_props });
 
     //@ts-ignore
     if (!doc_frag) {
         console.error("never rendered Initial render.");
-        [rendered_dom, doc_frag] = createFragment([null, {}]);
+        [rendered_dom, doc_frag] = createFragment([null, {}, []]);
     }
 
     return [
@@ -26,7 +26,7 @@ export const createComponent = (jsx: JSXComponent): [RenderedDOM<JSXComponent>, 
             [
                 component,
                 props,
-                /* ...children */
+                []
             ] as JSXComponent,
             rendered_dom!
         ],
