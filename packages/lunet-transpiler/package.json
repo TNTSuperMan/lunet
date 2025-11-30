@@ -1,6 +1,6 @@
 {
   "name": "lunet-transpiler",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "author": "TNTSuperMan",
   "license": "MIT",
   "description": "より柔軟なWebフロントエンドライブラリ lunetのトランスパイラー。",
@@ -13,7 +13,7 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "default": "./dist/index.cjs",
+      "default": "./dist/index.js",
       "browser": "./dist/index.js",
       "require": "./dist/index.cjs",
       "import": "./dist/index.js"
