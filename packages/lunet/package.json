@@ -1,6 +1,6 @@
 {
   "name": "lunet",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "author": "TNTSuperMan",
   "license": "MIT",
   "description": "より柔軟なWebフロントエンドライブラリ。",
@@ -25,7 +25,6 @@
     "format": ["esm", "cjs"],
     "target": "browser",
     "sourcemap": "linked",
-    "minify": true,
     "outDir": "dist"
   },
   "scripts": {
