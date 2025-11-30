@@ -1,6 +1,6 @@
 {
   "name": "lunet-transpiler",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "author": "TNTSuperMan",
   "license": "MIT",
   "description": "より柔軟なWebフロントエンドライブラリ lunetのトランスパイラー。",
@@ -19,7 +19,7 @@
       "import": "./dist/index.js"
     }
   },
-  "peerDependencies": {
+  "devDependencies": {
     "@babel/generator": "^7.28.3",
     "@babel/parser": "^7.28.3",
     "@babel/traverse": "^7.28.3",
