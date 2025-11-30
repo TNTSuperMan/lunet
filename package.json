@@ -22,5 +22,8 @@
   },
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "scripts": {
+    "build": "bunup && bun ./packages/lunet-website/build.ts"
+  }
 }

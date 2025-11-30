@@ -5,7 +5,6 @@
   "license": "MIT",
   "description": "lunetのウェブサイト",
   "private": true,
-  "module": "dist/index.js",
   "type": "module",
   "repository": {
     "type": "git",
@@ -16,8 +15,5 @@
   },
   "devDependencies": {
     "lunet-transpiler": "^0.0.1"
-  },
-  "scripts": {
-    "build": "bun build.ts"
   }
 }

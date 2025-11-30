@@ -18,16 +18,5 @@
       "require": "./dist/index.cjs",
       "import": "./dist/index.js"
     }
-  },
-  "bunup": {
-    "name": "lunet",
-    "entry": ["src/index.ts"],
-    "format": ["esm", "cjs"],
-    "target": "browser",
-    "sourcemap": "linked",
-    "outDir": "dist"
-  },
-  "scripts": {
-    "build": "bunup"
   }
 }

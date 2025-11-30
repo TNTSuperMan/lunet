@@ -19,21 +19,10 @@
       "import": "./dist/index.js"
     }
   },
-  "dependencies": {
+  "peerDependencies": {
     "@babel/generator": "^7.28.3",
     "@babel/parser": "^7.28.3",
     "@babel/traverse": "^7.28.3",
     "@babel/types": "^7.28.2"
-  },
-  "bunup": {
-    "name": "lunet-transpiler",
-    "entry": ["src/index.ts"],
-    "external": ["@babel/generator", "@babel/parser", "@babel/traverse", "@babel/types"],
-    "format": ["esm", "cjs"],
-    "target": "node",
-    "outDir": "dist"
-  },
-  "scripts": {
-    "build": "bunup"
   }
 }
