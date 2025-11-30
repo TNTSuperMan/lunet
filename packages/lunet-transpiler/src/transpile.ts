@@ -1,6 +1,6 @@
 import { parse } from "@babel/parser";
-import traverse from "@babel/traverse";
-import generate from "@babel/generator";
+const traverse = require("@babel/traverse") as typeof import("@babel/traverse");
+const generate = require("@babel/generator") as typeof import("@babel/generator");
 import * as t from "@babel/types";
 
 const jsxAttr2Object = (
@@ -109,7 +109,7 @@ export const transpile = (code: string, isTypeScript: boolean): string => {
         plugins: isTypeScript ? ["typescript", "jsx"] : ["jsx"]
     });
 
-    traverse(ast, {
+    traverse.default(ast, {
         JSXElement(ast){
             ast.replaceWith(jsx2Expression(ast.node));
         },
@@ -118,5 +118,5 @@ export const transpile = (code: string, isTypeScript: boolean): string => {
         }
     });
     
-    return generate(ast).code;
+    return generate.default(ast).code;
 }

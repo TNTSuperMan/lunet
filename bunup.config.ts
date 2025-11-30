@@ -16,7 +16,6 @@ export default defineWorkspace([
         config: {
             entry: "src/index.ts",
             format: ["esm", "cjs"],
-            noExternal: ["@babel/generator", "@babel/parser", "@babel/traverse", "@babel/types"],
             target: "node",
         },
     },
