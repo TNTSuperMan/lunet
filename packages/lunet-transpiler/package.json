@@ -1,6 +1,6 @@
 {
   "name": "lunet-transpiler",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": "TNTSuperMan",
   "license": "MIT",
   "description": "より柔軟なWebフロントエンドライブラリ lunetのトランスパイラー。",
@@ -31,7 +31,6 @@
     "external": ["@babel/generator", "@babel/parser", "@babel/traverse", "@babel/types"],
     "format": ["esm", "cjs"],
     "target": "node",
-    "minify": true,
     "outDir": "dist"
   },
   "scripts": {
