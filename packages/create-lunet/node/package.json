@@ -1,5 +1,6 @@
 {
     "name": "lunet-template-app",
+    "type": "module",
     "private": true,
     "dependencies": {
         "lunet": "^0.0.8",
