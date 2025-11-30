@@ -7,7 +7,7 @@ export const App = createComponent((render, init) => {
     effect(() => {
         render(<div>
             <h1>Hello, lunet!</h1>
-            <button $click={() => counter(counter() + 1)}>Count: {counter()}</button>
+            <button $click={() => counter(counter() + 1)}>Count: {counter().toString()}</button>
         </div>);
     })
 

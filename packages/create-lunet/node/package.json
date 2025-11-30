@@ -3,11 +3,11 @@
     "type": "module",
     "private": true,
     "dependencies": {
-        "lunet": "^0.0.8",
-        "alien-signals": "^3.1.1"
+        "alien-signals": "^3.1.1",
+        "lunet": "^0.0.8"
     },
     "devDependencies": {
-        "lunet-transpiler": "^0.0.4",
+        "lunet-transpiler": "^0.0.7",
         "vite": "^7.2.4"
     },
     "scripts": {
