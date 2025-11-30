@@ -1,0 +1,18 @@
+{
+  "name": "create-lunet",
+  "version": "0.0.0",
+  "author": "TNTSuperMan",
+  "license": "MIT",
+  "description": "瞬時にlunetプロジェクトを立ち上げます。",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TNTSuperMan/lunet.git"
+  },
+  "bin": {
+    "create-lunet": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "bun build.ts"
+  }
+}
