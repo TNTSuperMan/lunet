@@ -1,5 +1,5 @@
-import { effect, signal } from "alien-signals";
 import { createComponent } from "lunet";
+import { effect, signal } from "alien-signals";
 
 export const App = createComponent((render, init) => {
     const counter = signal(0);
