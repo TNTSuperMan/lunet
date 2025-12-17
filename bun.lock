@@ -1,5 +1,6 @@
 {
   "lockfileVersion": 1,
+  "configVersion": 0,
   "workspaces": {
     "": {
       "name": "lunet",
@@ -18,9 +19,16 @@
         "typescript": "^5.9.2",
       },
     },
+    "packages/create-lunet": {
+      "name": "create-lunet",
+      "version": "0.0.0",
+      "bin": {
+        "create-lunet": "./dist/index.js",
+      },
+    },
     "packages/lunet": {
       "name": "lunet",
-      "version": "0.0.6",
+      "version": "0.0.7",
     },
     "packages/lunet-transpiler": {
       "name": "lunet-transpiler",
