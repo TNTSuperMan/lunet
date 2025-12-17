@@ -10,7 +10,7 @@
     "url": "https://github.com/TNTSuperMan/lunet.git"
   },
   "bin": {
-    "create-lunet": "./dist/index.js"
+    "create-lunet": "./dist/index.mjs"
   },
   "scripts": {
     "build": "bun build.ts"
