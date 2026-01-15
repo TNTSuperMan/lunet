@@ -25,16 +25,7 @@ render(document.body, <>
         <div class="start">
             <h2>始める</h2>
             <kbd>
-                $ bun init <br/>
-                $ bun add lunet alien-signals <br/>
-                $ bun add -D lunet-transpiler <br/>
-            </kbd>
-
-            <code title="index.html">{ files["index.html"] }</code>
-            <code title="index.tsx">{ files["index.tsx"] }</code>
-            <code title="serve.ts">{ files["serve.ts"] }</code>
-
-            <kbd>
+                $ bun create lunet <br/>
                 $ bun serve
             </kbd>
         </div>
