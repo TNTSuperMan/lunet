@@ -1,6 +1,7 @@
-import { build, file } from "bun";
+import { build, file, write } from "bun";
 import { parse } from "@babel/parser";
 import { generate } from "@babel/generator";
+import { generateDts } from "typeroll";
 
 const render1_res = await build({
     entrypoints: [`${import.meta.dir}/src/render/index.ts`],
@@ -69,3 +70,13 @@ await build({
     format: "cjs",
     naming: "index.cjs",
 });
+
+const dts_result = await generateDts([
+    entrypoint,
+]);
+
+if (dts_result.errors.length) {
+    throw dts_result.errors;
+}
+
+await write(`${import.meta.dir}/dist/index.d.ts`, dts_result.files[0]!.dts);
