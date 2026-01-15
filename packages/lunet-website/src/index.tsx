@@ -26,7 +26,7 @@ render(document.body, <>
             <h2>始める</h2>
             <kbd>
                 $ bun create lunet <br/>
-                $ bun serve
+                $ bun dev
             </kbd>
         </div>
         <div class="points">
