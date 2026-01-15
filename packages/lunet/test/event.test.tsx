@@ -1,14 +1,14 @@
 import { describe, expect, mock, test } from "bun:test";
-import { h } from "../src";
-import { withRender } from "./utils/withRender";
+import { h } from "../dist";
+import { useRoot } from "./utils/useRoot";
 
 describe("Event", () => {
-    const render = withRender();
+    using root = useRoot();
 
     test("Should call once when once clicked", () => {
         const cb = mock(() => {});
 
-        render(<button $click={cb}></button>);
+        root.render(<button $click={cb}></button>);
         document.querySelector("button")?.click();
 
         expect(cb).toHaveBeenCalledTimes(1);
@@ -21,11 +21,11 @@ describe("Event", () => {
         const cb1 = mock(() => {});
         const cb2 = mock(() => {});
 
-        render(<button $click={cb1}></button>);
+        root.render(<button $click={cb1}></button>);
         for(let i = 0; i < CB1_CLICK_COUNT; i++)
             document.querySelector("button")?.click();
 
-        render(<button $click={cb2}></button>);
+        root.render(<button $click={cb2}></button>);
         for(let i = 0; i < CB2_CLICK_COUNT; i++)
             document.querySelector("button")?.click();
 
@@ -35,8 +35,8 @@ describe("Event", () => {
 
     test("Should not call removed callback", () => {
         const cb = mock(() => {});
-        render(<button $click={cb}></button>);
-        render(<button></button>);
+        root.render(<button $click={cb}></button>);
+        root.render(<button></button>);
 
         document.querySelector("button")?.click();
 
@@ -49,7 +49,7 @@ describe("Event", () => {
             expect(this as unknown).toBe(event.target);
         });
 
-        render(<button $click={cb}></button>);
+        root.render(<button $click={cb}></button>);
 
         document.querySelector("button")?.click();
 

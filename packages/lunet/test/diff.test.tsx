@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import type { JSXNode } from "../src";
+import type { JSXNode } from "../dist";
 import { diff, isCompatibleNode, type Patch } from "../src/render/diff";
 
 const TEST_CASES: [JSXNode[], JSXNode[]][] = [
