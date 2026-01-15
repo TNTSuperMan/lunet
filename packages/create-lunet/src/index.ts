@@ -47,10 +47,10 @@ switch (template) {
         });
         console.log(`
 To start development server:
-    npm run dev
+    bun dev
 
 To build page:
-    npm run build
+    bun run build
 
 Happy bunning! 🐇`);
         break;
