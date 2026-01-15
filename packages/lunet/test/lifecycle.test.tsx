@@ -23,7 +23,7 @@ test("Test lifecycle events", () => {
         expect(ev).toBeInstanceOf(CustomEvent);
         expect(ev.type).toBe("beforeupdate");
         expect(this).toBe(ev.detail);
-        expect(document.body.childNodes).toContain(ev.detail);
+        expect(document.body.childNodes as unknown).toContain(ev.detail);
         history.push(2);
         elements.push(ev.detail);
     });
@@ -31,7 +31,7 @@ test("Test lifecycle events", () => {
         expect(ev).toBeInstanceOf(CustomEvent);
         expect(ev.type).toBe("update");
         expect(this).toBe(ev.detail);
-        expect(document.body.childNodes).toContain(ev.detail);
+        expect(document.body.childNodes as unknown).toContain(ev.detail);
         history.push(3);
         elements.push(ev.detail);
     });
@@ -39,7 +39,7 @@ test("Test lifecycle events", () => {
         expect(ev).toBeInstanceOf(CustomEvent);
         expect(ev.type).toBe("beforeunmount");
         expect(this).toBe(ev.detail);
-        expect(document.body.childNodes).toContain(ev.detail);
+        expect(document.body.childNodes as unknown).toContain(ev.detail);
         history.push(4);
         elements.push(ev.detail);
     });
