@@ -1,8 +1,7 @@
-export interface Config {
+//@ts-nocheck
+
+export interface Options {
     batch?: (cb: () => void) => void;
 }
 
-//@ts-ignore
-export const config: Config = __CONFIG;
-
-export const batch: Exclude<Config["batch"], undefined> = config.batch ?? (cb => cb());
+export const batch: Exclude<Options["batch"], undefined> = options.batch ?? (cb => cb());

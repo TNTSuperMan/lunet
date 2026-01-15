@@ -1,13 +1,13 @@
 import "./jsx/type/jsx";
-import type { Config } from "./render/config";
+import type { Options } from "./render/config";
 
 export * from "./jsx";
 
-export const createRoot = (el: HTMLElement, __CONFIG: Config): {
+export const createRoot = (el: HTMLElement, options?: Options): {
     render(jsx: JSX.Element): void;
     unmount(): void;
 } => {
-    
+
     //@INJECT
 
     //@ts-ignore
