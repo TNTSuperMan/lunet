@@ -1,5 +1,5 @@
 import { type RenderedDOM } from ".";
-import { batch } from "../../batch";
+import { batch } from "../config";
 import type { JSXComponent, JSXFragment, JSXNode } from "../../jsx";
 import { afterFragment, createFragment, revokeFragment, updateFragment } from "./fragment";
 
