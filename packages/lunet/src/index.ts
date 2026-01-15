@@ -1,5 +1,5 @@
 import "./jsx/type/jsx";
 
 export * from "./jsx";
-export * from "./mount";
+export * from "./render";
 export { setBatch } from "./batch";
