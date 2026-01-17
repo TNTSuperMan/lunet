@@ -11,13 +11,13 @@ export const createRoot = (el: HTMLElement, options?: Options): {
     //@INJECT
 
     //@ts-ignore
-    const [node, dom] = createFragment([null, {}]);
+    const [node, dom] = createFragment([null, {}, []]);
     el.append(dom);
 
     return {
         render(jsx) {
             //@ts-ignore
-            updateFragment(node, [null, {}, jsx]);
+            updateFragment(node, [null, {}, [jsx]]);
         },
         unmount() {
             //@ts-ignore
