@@ -15,10 +15,13 @@ test("Test batch behavior", () => {
         }
     });
 
-    const Child = createComponent<{ a: string, b: string }>(() => ({
-        set a(_: string) { expect(batching_flag).toBeTrue(); batch_info[0]++; },
-        set b(_: string) { expect(batching_flag).toBeTrue(); batch_info[0]++; }
-    }));
+    const Child = createComponent<{ a: string, b: string }>((render) => {
+        render([null, {}]);
+        return {
+            set a(_: string) { expect(batching_flag).toBeTrue(); batch_info[0]++; },
+            set b(_: string) { expect(batching_flag).toBeTrue(); batch_info[0]++; }
+        }
+    });
 
     root.render(Child({ a: "a", b: "b" }));
 
