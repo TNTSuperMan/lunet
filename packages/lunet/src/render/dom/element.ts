@@ -1,6 +1,8 @@
-import { afterNode, createNode, revokeNode, updateNode, type RenderedDOM } from ".";
+import { afterNode, createNode, revokeNode, updateNode, type RenderedAnyNode } from ".";
 import type { JSXElement } from "../../jsx";
 import { diff } from "../diff";
+
+export type RenderedElement = [1, JSXElement, HTMLElement, RenderedAnyNode[]];
 
 const lifecycle_events = new Set([
     "beforeMount",
@@ -51,7 +53,7 @@ const setAttribute = (el: HTMLElement, name: string, value: unknown) => {
     }
 }
 
-export const createElement = (jsx: JSXElement): [RenderedDOM<JSXElement>, HTMLElement] => {
+export const createElement = (jsx: JSXElement): [RenderedElement, HTMLElement] => {
     const [tag, props, ...children] = jsx;
 
     props.$beforeMount?.();
@@ -68,7 +70,7 @@ export const createElement = (jsx: JSXElement): [RenderedDOM<JSXElement>, HTMLEl
     return [[1, jsx, element, rendered_children.map(e=>e[0])], element];
 }
 
-export const updateElement = (dom: RenderedDOM<JSXElement>, jsx: JSXElement) => {
+export const updateElement = (dom: RenderedElement, jsx: JSXElement) => {
     const [, [, old_props, ...old_children], element, rendered_children] = dom;
     const [, new_props, ...new_children] = jsx;
     old_props.$beforeUpdate?.call<any, any, any>(element, new CustomEvent("beforeupdate", { detail: element }));
@@ -114,7 +116,7 @@ export const updateElement = (dom: RenderedDOM<JSXElement>, jsx: JSXElement) => 
     new_props.$update?.call<any, any, any>(element, new CustomEvent("update", { detail: element }));
 }
 
-export const revokeElement = (dom: RenderedDOM<JSXElement>) => {
+export const revokeElement = (dom: RenderedElement) => {
     const [, [, props], element, rendered_children] = dom;
     props.$beforeUnmount?.call<any, any, any>(element, new CustomEvent("beforeunmount", { detail: element }));
 
@@ -126,6 +128,6 @@ export const revokeElement = (dom: RenderedDOM<JSXElement>) => {
     props.$unmount?.();
 }
 
-export const afterElement = (dom: RenderedDOM<JSXElement>, node: Node) => {
+export const afterElement = (dom: RenderedElement, node: Node) => {
     dom[2].after(node);
 }
