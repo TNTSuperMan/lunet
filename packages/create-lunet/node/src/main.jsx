@@ -1,4 +1,6 @@
-import { render } from "lunet";
+import { createRoot } from "lunet";
 import { App } from "./App";
 
-render(document.getElementById("app"), <App />);
+const root = createRoot(document.getElementById("root"));
+
+root.render(<App />);

@@ -4,10 +4,10 @@
   "private": true,
   "dependencies": {
     "alien-signals": "^3.1.1",
-    "lunet": "^0.0.8"
+    "lunet": "^0.0.11"
   },
   "devDependencies": {
-    "lunet-transpiler": "^0.0.7"
+    "lunet-transpiler": "^0.0.8"
   },
   "scripts": {
     "dev": "bun run --hot ./index.html",
