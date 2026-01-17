@@ -46,7 +46,7 @@ const jsx2Expression = (
         case "JSXFragment": return t.arrayExpression([
                 t.nullLiteral(),
                 t.objectExpression([]),
-                ...ast.children.map(child=>jsx2Elements(child)).filter(filterEmptyString)
+                t.arrayExpression(ast.children.map(child=>jsx2Elements(child)).filter(filterEmptyString))
             ]);
         case "JSXElement":
             const tag = ast.openingElement.name;
@@ -70,7 +70,7 @@ const jsx2Expression = (
                             return t.spreadElement(attr.argument);
                         }
                     })),
-                    ...ast.children.map(child => jsx2Elements(child)).filter(filterEmptyString)
+                    t.arrayExpression(ast.children.map(child => jsx2Elements(child)).filter(filterEmptyString))
                 ])
             }else switch(tag.type){
                 case "JSXIdentifier":
@@ -98,7 +98,7 @@ const jsx2Expression = (
         case "JSXSpreadChild": return t.arrayExpression([
             t.nullLiteral(),
             t.objectExpression([]),
-            t.spreadElement(ast.expression)
+            ast.expression
         ]);
     }
 }
