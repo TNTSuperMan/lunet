@@ -5,11 +5,11 @@ import { diff, isCompatibleNode, type Patch } from "../src/render/diff";
 const TEST_CASES: [JSXNode[], JSXNode[]][] = [
     [
         [
-            [null,{}],
+            [null,{},[]],
             "Text1",
-            ["a",{}],
+            ["a",{},[]],
         ],[
-            ["b",{}],
+            ["b",{},[]],
             "Text2"
         ]
 

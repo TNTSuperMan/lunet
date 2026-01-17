@@ -5,20 +5,20 @@ import { afterFragment, createFragment, revokeFragment, updateFragment, type Ren
 export type RenderedComponent = [3, JSXComponent, RenderedFragment];
 
 export const createComponent = (jsx: JSXComponent): [RenderedComponent, DocumentFragment] => {
-    const [component, init_props/* , ...children */] = jsx;
+    const [component, init_props, children] = jsx;
 
     let rendered_dom: RenderedFragment | void;
     let doc_frag: DocumentFragment | void;
 
     const props = component((jsx: JSXNode) => {
-        if (rendered_dom) updateFragment(rendered_dom, [null, {}, jsx]);
-        else [rendered_dom, doc_frag] = createFragment([null, {}, jsx]);
+        if (rendered_dom) updateFragment(rendered_dom, [null, {}, [jsx]]);
+        else [rendered_dom, doc_frag] = createFragment([null, {}, [jsx]]);
     }, { ...init_props });
 
     //@ts-ignore
     if (!doc_frag) {
         console.error("never rendered Initial render.");
-        [rendered_dom, doc_frag] = createFragment([null, {}]);
+        [rendered_dom, doc_frag] = createFragment([null, {}, []]);
     }
 
     return [
@@ -27,7 +27,7 @@ export const createComponent = (jsx: JSXComponent): [RenderedComponent, Document
             [
                 component,
                 props,
-                /* ...children */
+                children
             ] as JSXComponent,
             rendered_dom!
         ],

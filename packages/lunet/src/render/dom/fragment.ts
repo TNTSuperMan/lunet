@@ -5,7 +5,7 @@ import { diff } from "../diff";
 export type RenderedFragment = [2, JSXFragment, Comment, RenderedAnyNode[]];
 
 export const createFragment = (jsx: JSXFragment): [RenderedFragment, DocumentFragment] => {
-    const [,, ...children] = jsx;
+    const [,, children] = jsx;
     const mark = new Comment;
     const el = new DocumentFragment;
 
@@ -16,8 +16,8 @@ export const createFragment = (jsx: JSXFragment): [RenderedFragment, DocumentFra
 }
 
 export const updateFragment = (dom: RenderedFragment, jsx: JSXFragment) => {
-    const [, [,, ...old_children], mark, rendered_children] = dom;
-    const [,, ...new_children] = jsx;
+    const [, [,, old_children], mark, rendered_children] = dom;
+    const [,, new_children] = jsx;
 
     for (const [type, idx, jsx] of diff(old_children, new_children)) {
         switch(type){
