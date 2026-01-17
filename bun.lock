@@ -27,7 +27,7 @@
     },
     "packages/lunet": {
       "name": "lunet",
-      "version": "0.0.8",
+      "version": "0.0.10",
       "devDependencies": {
         "@babel/generator": "^7.28.6",
         "@babel/parser": "^7.28.6",
@@ -38,7 +38,7 @@
     },
     "packages/lunet-transpiler": {
       "name": "lunet-transpiler",
-      "version": "0.0.7",
+      "version": "0.0.8",
       "dependencies": {
         "@babel/generator": "^7.28.3",
         "@babel/parser": "^7.28.3",
@@ -53,10 +53,10 @@
       "name": "lunet-website",
       "version": "0.0.0",
       "dependencies": {
-        "lunet": "^0.0.4",
+        "lunet": "workspace:*",
       },
       "devDependencies": {
-        "lunet-transpiler": "^0.0.1",
+        "lunet-transpiler": "^0.0.8",
       },
     },
   },
@@ -374,10 +374,6 @@
     "@oxc-transform/binding-wasm32-wasi/@napi-rs/wasm-runtime": ["@napi-rs/wasm-runtime@0.2.12", "", { "dependencies": { "@emnapi/core": "^1.4.3", "@emnapi/runtime": "^1.4.3", "@tybys/wasm-util": "^0.10.0" } }, "sha512-ZVWUcfwY4E/yPitQJl481FjFo3K22D6qF0DuFH6Y/nbnE11GY5uguDxZMGXPQ8WQ0128MXQD7TnfHyK4oWoIJQ=="],
 
     "happy-dom/@types/node": ["@types/node@20.19.29", "", { "dependencies": { "undici-types": "~6.21.0" } }, "sha512-YrT9ArrGaHForBaCNwFjoqJWmn8G1Pr7+BH/vwyLHciA9qT/wSiuOhxGCT50JA5xLvFBd6PIiGkE3afxcPE1nw=="],
-
-    "lunet-website/lunet": ["lunet@0.0.4", "", {}, "sha512-QOg8u+MWbVTwyJgE9dJUFyoC0o6B0dXcqvBQb663YWGsSlBa7yjnabl6xaT7vSaMYNPsMempb7mS/wsfpnSKPA=="],
-
-    "lunet-website/lunet-transpiler": ["lunet-transpiler@0.0.1", "", { "dependencies": { "@babel/generator": "^7.28.3", "@babel/parser": "^7.28.3", "@babel/traverse": "^7.28.3", "@babel/types": "^7.28.2" } }, "sha512-EZ0PQgYEW04+tRepWG3dBoYw0UA6JAhA0OqQPzT7Kmwb3ust86YnrpIyoX7XOGYOryI3YI54F9m91z0h9WpuLg=="],
 
     "@bunup/dts/oxc-minify/@oxc-minify/binding-android-arm64": ["@oxc-minify/binding-android-arm64@0.93.0", "", { "os": "android", "cpu": "arm64" }, "sha512-N3j/JoK4hXwQbnyOJoEltM8MEkddWV3XtfYimO6jsMjr5R6QdauKaSVeQHO/lSezB7SFkrMPqr6X7tBfghHiXA=="],
 

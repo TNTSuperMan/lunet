@@ -11,10 +11,10 @@
     "url": "https://github.com/TNTSuperMan/lunet.git"
   },
   "dependencies": {
-    "lunet": "^0.0.4"
+    "lunet": "workspace:*"
   },
   "devDependencies": {
-    "lunet-transpiler": "^0.0.1"
+    "lunet-transpiler": "workspace:*"
   },
   "scripts": {
     "build": "bun build.ts"

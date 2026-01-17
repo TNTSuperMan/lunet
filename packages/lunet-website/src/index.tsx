@@ -1,4 +1,4 @@
-import { render, h, fragment } from "lunet";
+import { createRoot, h, fragment } from "lunet";
 import "../style/main.css";
 
 import f from "./files" with { type: "macro" };
@@ -13,7 +13,9 @@ import ColorBox_jsx from "../sample/ColorBox.jsx" with { type: "text" }; // @ts-
 import Form_jsx from "../sample/Form.jsx" with { type: "text" };
 */
 
-render(document.body, <>
+const root = createRoot(document.body);
+
+root.render(<>
     <nav>
         <a href="/">ホーム</a>
         <a target="_blank" href="https://github.com/TNTSuperMan/lunet/wiki">Wiki</a>
