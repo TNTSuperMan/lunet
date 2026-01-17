@@ -1,9 +1,9 @@
 import { test, expect, mock } from "bun:test";
-import { withRender } from "./utils/withRender";
-import { h, fragment } from "../src";
+import { useRoot } from "./utils/useRoot";
+import { h, fragment } from "../dist";
 
 test("Test lifecycle events", () => {
-    const render = withRender();
+    using root = useRoot();
 
     const history: number[] = [];
     const elements: HTMLElement[] = [];
@@ -23,7 +23,7 @@ test("Test lifecycle events", () => {
         expect(ev).toBeInstanceOf(CustomEvent);
         expect(ev.type).toBe("beforeupdate");
         expect(this).toBe(ev.detail);
-        expect(document.body.childNodes).toContain(ev.detail);
+        expect(document.body.childNodes as unknown).toContain(ev.detail);
         history.push(2);
         elements.push(ev.detail);
     });
@@ -31,7 +31,7 @@ test("Test lifecycle events", () => {
         expect(ev).toBeInstanceOf(CustomEvent);
         expect(ev.type).toBe("update");
         expect(this).toBe(ev.detail);
-        expect(document.body.childNodes).toContain(ev.detail);
+        expect(document.body.childNodes as unknown).toContain(ev.detail);
         history.push(3);
         elements.push(ev.detail);
     });
@@ -39,7 +39,7 @@ test("Test lifecycle events", () => {
         expect(ev).toBeInstanceOf(CustomEvent);
         expect(ev.type).toBe("beforeunmount");
         expect(this).toBe(ev.detail);
-        expect(document.body.childNodes).toContain(ev.detail);
+        expect(document.body.childNodes as unknown).toContain(ev.detail);
         history.push(4);
         elements.push(ev.detail);
     });
@@ -64,7 +64,7 @@ test("Test lifecycle events", () => {
         expect(unmount).toHaveBeenCalledWith();
     }
 
-    render(<div
+    root.render(<div
         $beforeMount={beforeMount}
         $mount={mount}
         $beforeUpdate={beforeUpdate}
@@ -77,7 +77,7 @@ test("Test lifecycle events", () => {
     expect(elements).toHaveLength(1);
     checkMount();
 
-    render(<div
+    root.render(<div
         $beforeMount={beforeMount}
         $mount={mount}
         $beforeUpdate={beforeUpdate}
@@ -93,7 +93,7 @@ test("Test lifecycle events", () => {
     checkMount();
     checkUpdate();
 
-    render(<></>);
+    root.render(<></>);
 
     expect(history).toEqual([0, 1, 2, 3, 4, 5]);
     expect(elements).toHaveLength(4);

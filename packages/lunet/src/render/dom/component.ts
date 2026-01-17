@@ -1,12 +1,13 @@
-import { type RenderedDOM } from ".";
-import { batch } from "../../batch";
-import type { JSXComponent, JSXFragment, JSXNode } from "../../jsx";
-import { afterFragment, createFragment, revokeFragment, updateFragment } from "./fragment";
+import { batch } from "../config";
+import type { JSXComponent, JSXNode } from "../../jsx";
+import { afterFragment, createFragment, revokeFragment, updateFragment, type RenderedFragment } from "./fragment";
 
-export const createComponent = (jsx: JSXComponent): [RenderedDOM<JSXComponent>, DocumentFragment] => {
+export type RenderedComponent = [3, JSXComponent, RenderedFragment];
+
+export const createComponent = (jsx: JSXComponent): [RenderedComponent, DocumentFragment] => {
     const [component, init_props/* , ...children */] = jsx;
 
-    let rendered_dom: RenderedDOM<JSXFragment> | void;
+    let rendered_dom: RenderedFragment | void;
     let doc_frag: DocumentFragment | void;
 
     const props = component((jsx: JSXNode) => {
@@ -34,7 +35,7 @@ export const createComponent = (jsx: JSXComponent): [RenderedDOM<JSXComponent>, 
     ];
 }
 
-export const updateComponent = (dom: RenderedDOM<JSXComponent>, jsx: JSXComponent) => {
+export const updateComponent = (dom: RenderedComponent, jsx: JSXComponent) => {
     const old_props = dom[1][1];
     const new_props = jsx[1];
 
@@ -44,10 +45,10 @@ export const updateComponent = (dom: RenderedDOM<JSXComponent>, jsx: JSXComponen
     });
 }
 
-export const revokeComponent = (dom: RenderedDOM<JSXComponent>) => (
+export const revokeComponent = (dom: RenderedComponent) => (
     revokeFragment(dom[2])
 )
 
-export const afterComponent = (dom: RenderedDOM<JSXComponent>, node: Node) => (
+export const afterComponent = (dom: RenderedComponent, node: Node) => (
     afterFragment(dom[2], node)
 )

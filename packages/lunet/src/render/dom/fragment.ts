@@ -1,8 +1,10 @@
-import { afterNode, createNode, revokeNode, updateNode, type RenderedDOM } from ".";
+import { afterNode, createNode, revokeNode, updateNode, type RenderedAnyNode } from ".";
 import type { JSXFragment } from "../../jsx";
 import { diff } from "../diff";
 
-export const createFragment = (jsx: JSXFragment): [RenderedDOM<JSXFragment>, DocumentFragment] => {
+export type RenderedFragment = [2, JSXFragment, Comment, RenderedAnyNode[]];
+
+export const createFragment = (jsx: JSXFragment): [RenderedFragment, DocumentFragment] => {
     const [,, ...children] = jsx;
     const mark = new Comment;
     const el = new DocumentFragment;
@@ -13,7 +15,7 @@ export const createFragment = (jsx: JSXFragment): [RenderedDOM<JSXFragment>, Doc
     return [[2, jsx, mark, rendered_children.map(e=>e[0])], el];
 }
 
-export const updateFragment = (dom: RenderedDOM<JSXFragment>, jsx: JSXFragment) => {
+export const updateFragment = (dom: RenderedFragment, jsx: JSXFragment) => {
     const [, [,, ...old_children], mark, rendered_children] = dom;
     const [,, ...new_children] = jsx;
 
@@ -41,13 +43,13 @@ export const updateFragment = (dom: RenderedDOM<JSXFragment>, jsx: JSXFragment) 
     dom[1] = jsx;
 }
 
-export const revokeFragment = (dom: RenderedDOM<JSXFragment>) => {
+export const revokeFragment = (dom: RenderedFragment) => {
     for (const child of dom[3])
         revokeNode(child);
     dom[2].remove();
 }
 
-export const afterFragment = (dom: RenderedDOM<JSXFragment>, node: Node) => {
+export const afterFragment = (dom: RenderedFragment, node: Node) => {
     const last_rendered_dom = dom[3].at(-1);
     if (last_rendered_dom)
         afterNode(last_rendered_dom, node);

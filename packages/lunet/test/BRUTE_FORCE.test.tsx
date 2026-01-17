@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test";
-import { type JSXNode } from "../src";
-import { withRender } from "./utils/withRender";
+import { type JSXNode } from "../dist";
+import { useRoot } from "./utils/useRoot";
 import { env } from "bun";
 
 const TEST_CASE_SEED = parseInt(env.BRUTE_FORCE_SEED ?? "") || 14;
@@ -111,7 +111,7 @@ ${children.map((child, i) => (i === detailIndex ? "HERE:" : "     ") + Bun.inspe
 }
 
 test.skipIf(!doTest)("Test JSX Diff Updates Exhaustive by BRUTE FORCE", async () => {
-    const render = withRender();
+    using root = useRoot();
 
     let before: JSXNode | null = null;
 
@@ -119,7 +119,7 @@ test.skipIf(!doTest)("Test JSX Diff Updates Exhaustive by BRUTE FORCE", async ()
         console.log(i);
         const jsx = GenerateRandomJSX();
         try {
-            render(jsx);
+            root.render(jsx);
         } catch (err) {
             throw new Error("Rendering failed", { cause: err });
         }

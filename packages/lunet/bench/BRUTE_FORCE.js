@@ -1,16 +1,10 @@
 import { GlobalRegistrator } from "@happy-dom/global-registrator";
 import { bench, run } from "mitata";
-import { createComponent, render as renderDOM } from "../dist/index.js";
+import { createRoot } from "../dist/index.js";
 
 GlobalRegistrator.register();
 
-let render;
-
-const Component = createComponent(r => {
-    render = r;
-    return {};
-});
-renderDOM(document.body, Component({}));
+const root = createRoot(document.body);
 
 const TEST_CASE_SEED = parseInt(process.env.BRUTE_FORCE_SEED ?? "") || 14;
 
@@ -62,7 +56,7 @@ const jsxnodes = Array(100).fill(0).map(() => GenerateRandomJSX());
 
 bench("render", () => {
     for (const jsx of jsxnodes) {
-        render(jsx);
+        root.render(jsx);
     }
 });
 

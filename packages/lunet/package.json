@@ -18,5 +18,15 @@
       "require": "./dist/index.cjs",
       "import": "./dist/index.js"
     }
+  },
+  "devDependencies": {
+    "@babel/generator": "^7.28.6",
+    "@babel/parser": "^7.28.6",
+    "@types/babel__generator": "^7.27.0",
+    "@types/babel__parser": "^7.1.5",
+    "typeroll": "^0.7.7"
+  },
+  "scripts": {
+    "build": "bun build.ts"
   }
 }
