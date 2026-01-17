@@ -3,9 +3,10 @@ import { h } from "../dist";
 import { useRoot } from "./utils/useRoot";
 
 describe("Event", () => {
-    using root = useRoot();
 
     test("Should call once when once clicked", () => {
+        using root = useRoot();
+
         const cb = mock(() => {});
 
         root.render(<button $click={cb}></button>);
@@ -15,6 +16,8 @@ describe("Event", () => {
     });
 
     test("Should modify callback", () => {
+        using root = useRoot();
+
         const CB1_CLICK_COUNT = 3;
         const CB2_CLICK_COUNT = 4;
 
@@ -34,6 +37,8 @@ describe("Event", () => {
     });
 
     test("Should not call removed callback", () => {
+        using root = useRoot();
+
         const cb = mock(() => {});
         root.render(<button $click={cb}></button>);
         root.render(<button></button>);
@@ -44,6 +49,8 @@ describe("Event", () => {
     });
 
     test("`event` should instanceof Event, and `this` should be event.target", () => {
+        using root = useRoot();
+
         const cb = mock(function(this: HTMLElement, event: Event) {
             expect(event).toBeInstanceOf(Event);
             expect(this as unknown).toBe(event.target);
@@ -57,6 +64,8 @@ describe("Event", () => {
     });
 
     test("Should not throw error when dispatched unhandled event", () => {
+        using _root = useRoot(<button></button>);
+
         const dispatchUnhandledEvent = () =>
             document.querySelector("button")?.dispatchEvent(new KeyboardEvent("keydown"));
 
