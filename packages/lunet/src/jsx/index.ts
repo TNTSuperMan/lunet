@@ -8,5 +8,5 @@ export type JSXComponent = [ComponentFunction<any>, object & Key, JSXNode[]];
 export type JSXFragment = [null, Key, JSXNode[]];
 
 export { type Component, createComponent } from "./component";
-export { fragment } from "./fragment";
+export { Fragment } from "./fragment";
 export { h } from "./likereact";
