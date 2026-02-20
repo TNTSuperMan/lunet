@@ -1,6 +1,6 @@
 {
   "name": "create-lunet",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "author": "TNTSuperMan",
   "license": "MIT",
   "description": "瞬時にlunetプロジェクトを立ち上げます。",
