@@ -1,4 +1,4 @@
-import "./jsx/type/jsx";
+export * from "./jsx/type/jsx";
 import type { Options } from "./render/config";
 
 export * from "./jsx";
