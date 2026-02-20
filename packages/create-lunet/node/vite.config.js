@@ -7,7 +7,7 @@ export default defineConfig({
     esbuild: {
         jsx: 'transform',
         jsxFactory: 'h',
-        jsxFragment: 'fragment',
-        jsxInject: `import { h, fragment } from 'lunet'`,
+        jsxFragment: 'Fragment',
+        jsxInject: `import { h, Fragment } from 'lunet'`,
     },
 })

@@ -1,4 +1,4 @@
-import { createRoot, h, fragment } from "lunet";
+import { createRoot, h, Fragment } from "lunet";
 import "../style/main.css";
 
 import f from "./files" with { type: "macro" };
