@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "alien-signals": "^3.1.1",
-    "lunet": "^0.0.11"
+    "lunet": "^0.0.12"
   },
   "devDependencies": {
     "lunet-transpiler": "^0.0.8"
