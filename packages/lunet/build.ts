@@ -1,4 +1,4 @@
-import { build, file, write } from "bun";
+import { build, file, write, type BuildConfig } from "bun";
 import { parse } from "@babel/parser";
 import { generate } from "@babel/generator";
 import { generateDts } from "typeroll";
@@ -54,10 +54,7 @@ const cfg = {
         [entrypoint]: entry_src.replace("//@INJECT", render2_code),
     },
     outdir: `${import.meta.dir}/dist/`
-} as {
-    entrypoints: [string],
-    outdir: string,
-};
+} as BuildConfig;
 
 await build({
     ...cfg,
